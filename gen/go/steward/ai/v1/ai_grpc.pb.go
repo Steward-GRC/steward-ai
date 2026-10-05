@@ -105,7 +105,8 @@ type AiServiceClient interface {
 	// SetOrgContext sets the organisation context prepended to every prompt.
 	// Empty by default; empty sends none.
 	SetOrgContext(ctx context.Context, in *SetOrgContextRequest, opts ...grpc.CallOption) (*SetOrgContextResponse, error)
-	// GetTopQuestions returns the questions asked most often.
+	// GetTopQuestions returns the questions asked most often whose cited
+	// policies the scope may all read.
 	GetTopQuestions(ctx context.Context, in *GetTopQuestionsRequest, opts ...grpc.CallOption) (*GetTopQuestionsResponse, error)
 	// GetPolicySummary reads the summary stored when a version was published.
 	GetPolicySummary(ctx context.Context, in *GetPolicySummaryRequest, opts ...grpc.CallOption) (*GetPolicySummaryResponse, error)
@@ -389,7 +390,8 @@ type AiServiceServer interface {
 	// SetOrgContext sets the organisation context prepended to every prompt.
 	// Empty by default; empty sends none.
 	SetOrgContext(context.Context, *SetOrgContextRequest) (*SetOrgContextResponse, error)
-	// GetTopQuestions returns the questions asked most often.
+	// GetTopQuestions returns the questions asked most often whose cited
+	// policies the scope may all read.
 	GetTopQuestions(context.Context, *GetTopQuestionsRequest) (*GetTopQuestionsResponse, error)
 	// GetPolicySummary reads the summary stored when a version was published.
 	GetPolicySummary(context.Context, *GetPolicySummaryRequest) (*GetPolicySummaryResponse, error)

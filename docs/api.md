@@ -20,7 +20,7 @@ names them.
 | `include_sensitive` | Sensitive documents in those categories are readable too. |
 | `all_categories` | Every document is readable, sensitive ones included. |
 
-Retrieval, citations, cached answers and related policies are filtered by the scope inside the
+Retrieval, citations, cached answers, top questions and related policies are filtered by the scope inside the
 database query, so nothing outside it reaches the model or the answer.
 
 ## Calls
@@ -31,7 +31,7 @@ database query, so nothing outside it reaches the model or the answer.
 | `AuthoringAssist` | Suggests text for one editable region (draft, expand, rewrite, clarify, summarise). Never applied by the service. |
 | `SubmitAIJob`, `GetAIJob` | Start an asynchronous job and read its state. A job reads as not found to anyone but its submitter. |
 | `GetRelatedPolicies` | The policies nearest to one policy, filtered by the scope. |
-| `GetTopQuestions`, `GetPolicySummary` | The questions asked most often; the summary stored at publish. |
+| `GetTopQuestions`, `GetPolicySummary` | The questions asked most often, only those whose cited policies the scope may all read; the summary stored at publish. |
 | `GetProviderStatus` | The cached provider status; never calls the provider. |
 | `GetAIEnabled`, `SetAIEnabled` | The module switch. Turning it on needs the current data notice accepted. |
 | `GetAIConfig` | The settings. The credential shows only as set, with its last four characters. |

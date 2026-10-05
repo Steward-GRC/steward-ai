@@ -2499,7 +2499,8 @@ func (x *SetOrgContextResponse) GetOrgContext() string {
 type GetTopQuestionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// limit caps the questions returned; zero uses the default.
-	Limit         int32 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Limit         int32      `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Scope         *ReadScope `protobuf:"bytes,2,opt,name=scope,proto3" json:"scope,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2539,6 +2540,13 @@ func (x *GetTopQuestionsRequest) GetLimit() int32 {
 		return x.Limit
 	}
 	return 0
+}
+
+func (x *GetTopQuestionsRequest) GetScope() *ReadScope {
+	if x != nil {
+		return x.Scope
+	}
+	return nil
 }
 
 type GetTopQuestionsResponse struct {
@@ -3256,9 +3264,10 @@ const file_steward_ai_v1_ai_proto_rawDesc = "" +
 	"orgContext\"8\n" +
 	"\x15SetOrgContextResponse\x12\x1f\n" +
 	"\vorg_context\x18\x01 \x01(\tR\n" +
-	"orgContext\".\n" +
+	"orgContext\"^\n" +
 	"\x16GetTopQuestionsRequest\x12\x14\n" +
-	"\x05limit\x18\x01 \x01(\x05R\x05limit\"7\n" +
+	"\x05limit\x18\x01 \x01(\x05R\x05limit\x12.\n" +
+	"\x05scope\x18\x02 \x01(\v2\x18.steward.ai.v1.ReadScopeR\x05scope\"7\n" +
 	"\x17GetTopQuestionsResponse\x12\x1c\n" +
 	"\tquestions\x18\x01 \x03(\tR\tquestions\"8\n" +
 	"\x17GetPolicySummaryRequest\x12\x1d\n" +
@@ -3436,53 +3445,54 @@ var file_steward_ai_v1_ai_proto_depIdxs = []int32{
 	3,  // 14: steward.ai.v1.SetProviderConfigRequest.provider:type_name -> steward.ai.v1.Provider
 	24, // 15: steward.ai.v1.SetProviderConfigResponse.config:type_name -> steward.ai.v1.AIConfig
 	23, // 16: steward.ai.v1.AcceptDataNoticeResponse.data_notice:type_name -> steward.ai.v1.DataNotice
-	4,  // 17: steward.ai.v1.GetRelatedPoliciesRequest.scope:type_name -> steward.ai.v1.ReadScope
-	51, // 18: steward.ai.v1.GetRelatedPoliciesResponse.related:type_name -> steward.ai.v1.RelatedPolicy
-	5,  // 19: steward.ai.v1.AiService.SearchAndAnswer:input_type -> steward.ai.v1.SearchAndAnswerRequest
-	10, // 20: steward.ai.v1.AiService.AuthoringAssist:input_type -> steward.ai.v1.AuthoringAssistRequest
-	12, // 21: steward.ai.v1.AiService.SubmitAIJob:input_type -> steward.ai.v1.SubmitAIJobRequest
-	14, // 22: steward.ai.v1.AiService.GetAIJob:input_type -> steward.ai.v1.GetAIJobRequest
-	17, // 23: steward.ai.v1.AiService.GetProviderStatus:input_type -> steward.ai.v1.GetProviderStatusRequest
-	19, // 24: steward.ai.v1.AiService.GetAIEnabled:input_type -> steward.ai.v1.GetAIEnabledRequest
-	21, // 25: steward.ai.v1.AiService.SetAIEnabled:input_type -> steward.ai.v1.SetAIEnabledRequest
-	25, // 26: steward.ai.v1.AiService.GetAIConfig:input_type -> steward.ai.v1.GetAIConfigRequest
-	27, // 27: steward.ai.v1.AiService.SetProviderConfig:input_type -> steward.ai.v1.SetProviderConfigRequest
-	29, // 28: steward.ai.v1.AiService.SetProviderCredential:input_type -> steward.ai.v1.SetProviderCredentialRequest
-	31, // 29: steward.ai.v1.AiService.TestProvider:input_type -> steward.ai.v1.TestProviderRequest
-	33, // 30: steward.ai.v1.AiService.AcceptDataNotice:input_type -> steward.ai.v1.AcceptDataNoticeRequest
-	35, // 31: steward.ai.v1.AiService.SetMonthlyLimit:input_type -> steward.ai.v1.SetMonthlyLimitRequest
-	37, // 32: steward.ai.v1.AiService.GetUsage:input_type -> steward.ai.v1.GetUsageRequest
-	39, // 33: steward.ai.v1.AiService.SetOrgContext:input_type -> steward.ai.v1.SetOrgContextRequest
-	41, // 34: steward.ai.v1.AiService.GetTopQuestions:input_type -> steward.ai.v1.GetTopQuestionsRequest
-	43, // 35: steward.ai.v1.AiService.GetPolicySummary:input_type -> steward.ai.v1.GetPolicySummaryRequest
-	45, // 36: steward.ai.v1.AiService.SetAIRetrievalConfig:input_type -> steward.ai.v1.SetAIRetrievalConfigRequest
-	47, // 37: steward.ai.v1.AiService.SetUserAiQueryLimit:input_type -> steward.ai.v1.SetUserAiQueryLimitRequest
-	49, // 38: steward.ai.v1.AiService.GetRelatedPolicies:input_type -> steward.ai.v1.GetRelatedPoliciesRequest
-	6,  // 39: steward.ai.v1.AiService.SearchAndAnswer:output_type -> steward.ai.v1.SearchAndAnswerResponse
-	11, // 40: steward.ai.v1.AiService.AuthoringAssist:output_type -> steward.ai.v1.AuthoringAssistResponse
-	13, // 41: steward.ai.v1.AiService.SubmitAIJob:output_type -> steward.ai.v1.SubmitAIJobResponse
-	15, // 42: steward.ai.v1.AiService.GetAIJob:output_type -> steward.ai.v1.GetAIJobResponse
-	18, // 43: steward.ai.v1.AiService.GetProviderStatus:output_type -> steward.ai.v1.GetProviderStatusResponse
-	20, // 44: steward.ai.v1.AiService.GetAIEnabled:output_type -> steward.ai.v1.GetAIEnabledResponse
-	22, // 45: steward.ai.v1.AiService.SetAIEnabled:output_type -> steward.ai.v1.SetAIEnabledResponse
-	26, // 46: steward.ai.v1.AiService.GetAIConfig:output_type -> steward.ai.v1.GetAIConfigResponse
-	28, // 47: steward.ai.v1.AiService.SetProviderConfig:output_type -> steward.ai.v1.SetProviderConfigResponse
-	30, // 48: steward.ai.v1.AiService.SetProviderCredential:output_type -> steward.ai.v1.SetProviderCredentialResponse
-	32, // 49: steward.ai.v1.AiService.TestProvider:output_type -> steward.ai.v1.TestProviderResponse
-	34, // 50: steward.ai.v1.AiService.AcceptDataNotice:output_type -> steward.ai.v1.AcceptDataNoticeResponse
-	36, // 51: steward.ai.v1.AiService.SetMonthlyLimit:output_type -> steward.ai.v1.SetMonthlyLimitResponse
-	38, // 52: steward.ai.v1.AiService.GetUsage:output_type -> steward.ai.v1.GetUsageResponse
-	40, // 53: steward.ai.v1.AiService.SetOrgContext:output_type -> steward.ai.v1.SetOrgContextResponse
-	42, // 54: steward.ai.v1.AiService.GetTopQuestions:output_type -> steward.ai.v1.GetTopQuestionsResponse
-	44, // 55: steward.ai.v1.AiService.GetPolicySummary:output_type -> steward.ai.v1.GetPolicySummaryResponse
-	46, // 56: steward.ai.v1.AiService.SetAIRetrievalConfig:output_type -> steward.ai.v1.SetAIRetrievalConfigResponse
-	48, // 57: steward.ai.v1.AiService.SetUserAiQueryLimit:output_type -> steward.ai.v1.SetUserAiQueryLimitResponse
-	50, // 58: steward.ai.v1.AiService.GetRelatedPolicies:output_type -> steward.ai.v1.GetRelatedPoliciesResponse
-	39, // [39:59] is the sub-list for method output_type
-	19, // [19:39] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	4,  // 17: steward.ai.v1.GetTopQuestionsRequest.scope:type_name -> steward.ai.v1.ReadScope
+	4,  // 18: steward.ai.v1.GetRelatedPoliciesRequest.scope:type_name -> steward.ai.v1.ReadScope
+	51, // 19: steward.ai.v1.GetRelatedPoliciesResponse.related:type_name -> steward.ai.v1.RelatedPolicy
+	5,  // 20: steward.ai.v1.AiService.SearchAndAnswer:input_type -> steward.ai.v1.SearchAndAnswerRequest
+	10, // 21: steward.ai.v1.AiService.AuthoringAssist:input_type -> steward.ai.v1.AuthoringAssistRequest
+	12, // 22: steward.ai.v1.AiService.SubmitAIJob:input_type -> steward.ai.v1.SubmitAIJobRequest
+	14, // 23: steward.ai.v1.AiService.GetAIJob:input_type -> steward.ai.v1.GetAIJobRequest
+	17, // 24: steward.ai.v1.AiService.GetProviderStatus:input_type -> steward.ai.v1.GetProviderStatusRequest
+	19, // 25: steward.ai.v1.AiService.GetAIEnabled:input_type -> steward.ai.v1.GetAIEnabledRequest
+	21, // 26: steward.ai.v1.AiService.SetAIEnabled:input_type -> steward.ai.v1.SetAIEnabledRequest
+	25, // 27: steward.ai.v1.AiService.GetAIConfig:input_type -> steward.ai.v1.GetAIConfigRequest
+	27, // 28: steward.ai.v1.AiService.SetProviderConfig:input_type -> steward.ai.v1.SetProviderConfigRequest
+	29, // 29: steward.ai.v1.AiService.SetProviderCredential:input_type -> steward.ai.v1.SetProviderCredentialRequest
+	31, // 30: steward.ai.v1.AiService.TestProvider:input_type -> steward.ai.v1.TestProviderRequest
+	33, // 31: steward.ai.v1.AiService.AcceptDataNotice:input_type -> steward.ai.v1.AcceptDataNoticeRequest
+	35, // 32: steward.ai.v1.AiService.SetMonthlyLimit:input_type -> steward.ai.v1.SetMonthlyLimitRequest
+	37, // 33: steward.ai.v1.AiService.GetUsage:input_type -> steward.ai.v1.GetUsageRequest
+	39, // 34: steward.ai.v1.AiService.SetOrgContext:input_type -> steward.ai.v1.SetOrgContextRequest
+	41, // 35: steward.ai.v1.AiService.GetTopQuestions:input_type -> steward.ai.v1.GetTopQuestionsRequest
+	43, // 36: steward.ai.v1.AiService.GetPolicySummary:input_type -> steward.ai.v1.GetPolicySummaryRequest
+	45, // 37: steward.ai.v1.AiService.SetAIRetrievalConfig:input_type -> steward.ai.v1.SetAIRetrievalConfigRequest
+	47, // 38: steward.ai.v1.AiService.SetUserAiQueryLimit:input_type -> steward.ai.v1.SetUserAiQueryLimitRequest
+	49, // 39: steward.ai.v1.AiService.GetRelatedPolicies:input_type -> steward.ai.v1.GetRelatedPoliciesRequest
+	6,  // 40: steward.ai.v1.AiService.SearchAndAnswer:output_type -> steward.ai.v1.SearchAndAnswerResponse
+	11, // 41: steward.ai.v1.AiService.AuthoringAssist:output_type -> steward.ai.v1.AuthoringAssistResponse
+	13, // 42: steward.ai.v1.AiService.SubmitAIJob:output_type -> steward.ai.v1.SubmitAIJobResponse
+	15, // 43: steward.ai.v1.AiService.GetAIJob:output_type -> steward.ai.v1.GetAIJobResponse
+	18, // 44: steward.ai.v1.AiService.GetProviderStatus:output_type -> steward.ai.v1.GetProviderStatusResponse
+	20, // 45: steward.ai.v1.AiService.GetAIEnabled:output_type -> steward.ai.v1.GetAIEnabledResponse
+	22, // 46: steward.ai.v1.AiService.SetAIEnabled:output_type -> steward.ai.v1.SetAIEnabledResponse
+	26, // 47: steward.ai.v1.AiService.GetAIConfig:output_type -> steward.ai.v1.GetAIConfigResponse
+	28, // 48: steward.ai.v1.AiService.SetProviderConfig:output_type -> steward.ai.v1.SetProviderConfigResponse
+	30, // 49: steward.ai.v1.AiService.SetProviderCredential:output_type -> steward.ai.v1.SetProviderCredentialResponse
+	32, // 50: steward.ai.v1.AiService.TestProvider:output_type -> steward.ai.v1.TestProviderResponse
+	34, // 51: steward.ai.v1.AiService.AcceptDataNotice:output_type -> steward.ai.v1.AcceptDataNoticeResponse
+	36, // 52: steward.ai.v1.AiService.SetMonthlyLimit:output_type -> steward.ai.v1.SetMonthlyLimitResponse
+	38, // 53: steward.ai.v1.AiService.GetUsage:output_type -> steward.ai.v1.GetUsageResponse
+	40, // 54: steward.ai.v1.AiService.SetOrgContext:output_type -> steward.ai.v1.SetOrgContextResponse
+	42, // 55: steward.ai.v1.AiService.GetTopQuestions:output_type -> steward.ai.v1.GetTopQuestionsResponse
+	44, // 56: steward.ai.v1.AiService.GetPolicySummary:output_type -> steward.ai.v1.GetPolicySummaryResponse
+	46, // 57: steward.ai.v1.AiService.SetAIRetrievalConfig:output_type -> steward.ai.v1.SetAIRetrievalConfigResponse
+	48, // 58: steward.ai.v1.AiService.SetUserAiQueryLimit:output_type -> steward.ai.v1.SetUserAiQueryLimitResponse
+	50, // 59: steward.ai.v1.AiService.GetRelatedPolicies:output_type -> steward.ai.v1.GetRelatedPoliciesResponse
+	40, // [40:60] is the sub-list for method output_type
+	20, // [20:40] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_steward_ai_v1_ai_proto_init() }
