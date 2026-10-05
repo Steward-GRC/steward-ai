@@ -1,0 +1,152 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.22.0
+  name: policyaijobs.ai.steward-grc.com
+spec:
+  group: ai.steward-grc.com
+  names:
+    kind: PolicyAIJob
+    listKind: PolicyAIJobList
+    plural: policyaijobs
+    singular: policyaijob
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.operation
+      name: Operation
+      type: string
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: PolicyAIJob is one asynchronous AI job.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              PolicyAIJobSpec is one job request. Everything operation-specific is in
+              Input, whose shape each operation defines, so a new operation changes only
+              the operator's dispatch and its own input type.
+            properties:
+              actorUserId:
+                description: |-
+                  ActorUserID is the person who submitted the job. GetAIJob answers only
+                  that person, and the completion event and audit name them.
+                type: string
+              allCategories:
+                type: boolean
+              categoryId:
+                description: CategoryID is the owning category, carried for audit.
+                type: string
+              impersonatorUserId:
+                description: |-
+                  ImpersonatorUserID is the administrator acting as ActorUserID, when the
+                  job was submitted during act-as. Audit names them.
+                type: string
+              includeSensitive:
+                type: boolean
+              input:
+                description: Input is the operation's payload.
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              modelId:
+                description: |-
+                  ModelID is the model the job runs on, resolved when it was submitted,
+                  so a later model change never affects a job already created.
+                type: string
+              operation:
+                description: Operation selects what the operator runs.
+                enum:
+                - DRAFT
+                - REWRITE
+                - CLARIFY
+                - SUMMARIZE
+                - REVIEW
+                - QA
+                - REVISE
+                - RELATED_REEVAL
+                - SUGGEST_ENRICHMENTS
+                - RELATIONSHIP_LEARN
+                type: string
+              policyId:
+                description: |-
+                  PolicyID is the document the job is about. Empty for a document not
+                  created yet.
+                type: string
+              readCategoryIds:
+                description: |-
+                  ReadCategoryIDs, IncludeSensitive and AllCategories are the
+                  submitter's read scope at submission, which a retrieving job (QA,
+                  enrichment suggestions) is held to.
+                items:
+                  type: string
+                type: array
+              versionId:
+                description: |-
+                  VersionID is the version the job is about. Empty when there is no draft
+                  yet.
+                type: string
+            required:
+            - operation
+            type: object
+          status:
+            description: PolicyAIJobStatus is the outcome of a PolicyAIJob.
+            properties:
+              attempts:
+                description: |-
+                  Attempts counts the failed attempts so far. Retries stop at the
+                  operator's limit, and a retry is not started while the module is off.
+                type: integer
+              error:
+                description: Error is set when Phase is Failed.
+                type: string
+              finishedAt:
+                description: FinishedAt is set when the job reaches Succeeded or Failed.
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the generation the status was computed
+                  from.
+                format: int64
+                type: integer
+              phase:
+                description: Phase is the current lifecycle phase.
+                type: string
+              resultRef:
+                description: ResultRef is the cache key of the result, set once Phase
+                  is Succeeded.
+                type: string
+              startedAt:
+                description: StartedAt is set when the job leaves Pending.
+                format: date-time
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
