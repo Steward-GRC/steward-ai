@@ -64,7 +64,8 @@ service AiService {
   // SetOrgContext sets the organisation context prepended to every prompt.
   // Empty by default; empty sends none.
   rpc SetOrgContext(SetOrgContextRequest) returns (SetOrgContextResponse);
-  // GetTopQuestions returns the questions asked most often.
+  // GetTopQuestions returns the questions asked most often whose cited
+  // policies the scope may all read.
   rpc GetTopQuestions(GetTopQuestionsRequest) returns (GetTopQuestionsResponse);
   // GetPolicySummary reads the summary stored when a version was published.
   rpc GetPolicySummary(GetPolicySummaryRequest) returns (GetPolicySummaryResponse);
@@ -401,6 +402,7 @@ message SetOrgContextResponse {
 message GetTopQuestionsRequest {
   // limit caps the questions returned; zero uses the default.
   int32 limit = 1;
+  ReadScope scope = 2;
 }
 
 message GetTopQuestionsResponse {
