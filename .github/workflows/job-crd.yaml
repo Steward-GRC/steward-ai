@@ -1,0 +1,39 @@
+name: CRD
+# Regenerates the deepcopy code and the CRD manifest from the Go types and
+# fails if either differs from what's committed. Pull requests only, not
+# while the PR is a draft.
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  crd:
+    name: CRD drift
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Setup Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: Generate
+        run: |
+          go run sigs.k8s.io/controller-tools/cmd/controller-gen@v0.22.0 \
+            object:headerFile=hack/boilerplate.go.txt crd paths=./api/... \
+            output:crd:artifacts:config=deployments/crd
+      - name: Check for drift
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Generated files are stale; run 'task generate' and commit:"
+            git status --porcelain
+            git diff
+            exit 1
+          fi

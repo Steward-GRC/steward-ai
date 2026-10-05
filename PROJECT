@@ -1,0 +1,16 @@
+domain: steward-grc.com
+layout:
+- go.kubebuilder.io/v4
+projectName: steward-ai
+repo: github.com/Steward-GRC/steward-ai
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: steward-grc.com
+  group: ai
+  kind: PolicyAIJob
+  path: github.com/Steward-GRC/steward-ai/api/v1alpha1
+  version: v1alpha1
+version: "3"
