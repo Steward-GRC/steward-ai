@@ -1,0 +1,464 @@
+// Copyright 2026 The Steward Authors
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package steward.ai.v1;
+
+option go_package = "github.com/Steward-GRC/steward-ai/gen/go/steward/ai/v1;aiv1";
+
+// AiService is the AI module: grounded answers with citations, authoring
+// assist, asynchronous generation jobs, related policies, and the module's
+// settings and guardrails.
+//
+// The gateway is the only caller. It authenticates the person, decides what
+// they may do, and sends the person as the go-grpc-actor actor; no request
+// carries a user id or a role. Read scopes are bound by the gateway from the
+// person's access, never taken from the browser.
+//
+// While the module is off every intake call (SearchAndAnswer,
+// AuthoringAssist, SubmitAIJob, TestProvider) is refused with
+// AI_DISABLED, and nothing calls a provider.
+service AiService {
+  // SearchAndAnswer retrieves the chunks the scope may read, answers from
+  // them only, and cites them.
+  rpc SearchAndAnswer(SearchAndAnswerRequest) returns (SearchAndAnswerResponse);
+  // AuthoringAssist suggests text for one editable region. The suggestion is
+  // never applied by the service.
+  rpc AuthoringAssist(AuthoringAssistRequest) returns (AuthoringAssistResponse);
+  // SubmitAIJob creates an asynchronous job (a PolicyAIJob resource) and
+  // returns its id at once. The operator runs it and publishes a completion
+  // event.
+  rpc SubmitAIJob(SubmitAIJobRequest) returns (SubmitAIJobResponse);
+  // GetAIJob reports a job submitted by the same person. A job submitted by
+  // someone else reads as not found.
+  rpc GetAIJob(GetAIJobRequest) returns (GetAIJobResponse);
+  // GetProviderStatus reports the service's cached view of whether the
+  // generative provider is usable. It never calls the provider.
+  rpc GetProviderStatus(GetProviderStatusRequest) returns (GetProviderStatusResponse);
+  // GetAIEnabled reports the module switch.
+  rpc GetAIEnabled(GetAIEnabledRequest) returns (GetAIEnabledResponse);
+  // SetAIEnabled turns the module on or off. Turning it on is refused with
+  // AI_DATA_NOTICE_REQUIRED until the current data notice is accepted.
+  rpc SetAIEnabled(SetAIEnabledRequest) returns (SetAIEnabledResponse);
+  // GetAIConfig reads the module's settings. The credential is never
+  // returned: only whether one is set and its last four characters.
+  rpc GetAIConfig(GetAIConfigRequest) returns (GetAIConfigResponse);
+  // SetProviderConfig sets the generative provider and its non-secret
+  // settings. A model change affects jobs submitted after it only.
+  rpc SetProviderConfig(SetProviderConfigRequest) returns (SetProviderConfigResponse);
+  // SetProviderCredential stores the provider's key or token, encrypted. An
+  // empty credential clears it. Write-only: no call returns it.
+  rpc SetProviderCredential(SetProviderCredentialRequest) returns (SetProviderCredentialResponse);
+  // TestProvider makes one small call to the configured provider with the
+  // stored credential and reports the outcome.
+  rpc TestProvider(TestProviderRequest) returns (TestProviderResponse);
+  // AcceptDataNotice records that an administrator accepted the data notice
+  // of the given version.
+  rpc AcceptDataNotice(AcceptDataNoticeRequest) returns (AcceptDataNoticeResponse);
+  // SetMonthlyLimit sets the organisation's monthly limit on provider
+  // requests. Zero removes the limit.
+  rpc SetMonthlyLimit(SetMonthlyLimitRequest) returns (SetMonthlyLimitResponse);
+  // GetUsage reads the usage meter for the current month.
+  rpc GetUsage(GetUsageRequest) returns (GetUsageResponse);
+  // SetOrgContext sets the organisation context prepended to every prompt.
+  // Empty by default; empty sends none.
+  rpc SetOrgContext(SetOrgContextRequest) returns (SetOrgContextResponse);
+  // GetTopQuestions returns the questions asked most often.
+  rpc GetTopQuestions(GetTopQuestionsRequest) returns (GetTopQuestionsResponse);
+  // GetPolicySummary reads the summary stored when a version was published.
+  rpc GetPolicySummary(GetPolicySummaryRequest) returns (GetPolicySummaryResponse);
+  // SetAIRetrievalConfig sets the number of candidate chunks retrieved for
+  // grounding. Zero clears the override.
+  rpc SetAIRetrievalConfig(SetAIRetrievalConfigRequest) returns (SetAIRetrievalConfigResponse);
+  // SetUserAiQueryLimit sets or clears one person's daily query limit.
+  rpc SetUserAiQueryLimit(SetUserAiQueryLimitRequest) returns (SetUserAiQueryLimitResponse);
+  // GetRelatedPolicies returns the policies nearest to one policy, filtered
+  // by the same read scope as SearchAndAnswer, so a relation never reveals a
+  // policy the person can't read.
+  rpc GetRelatedPolicies(GetRelatedPoliciesRequest) returns (GetRelatedPoliciesResponse);
+}
+
+// ReadScope is what the person asking may read, bound by the gateway.
+// Standard documents are readable in the listed categories; sensitive
+// documents also need include_sensitive. all_categories reads every
+// document, sensitive ones included.
+message ReadScope {
+  repeated string category_ids = 1;
+  bool include_sensitive = 2;
+  bool all_categories = 3;
+}
+
+message SearchAndAnswerRequest {
+  string question = 1;
+  // category_id narrows the search to one category the scope may read.
+  // Empty searches the whole scope.
+  string category_id = 2;
+  ReadScope scope = 3;
+}
+
+message SearchAndAnswerResponse {
+  string answer = 1;
+  repeated Citation citations = 2;
+  // no_authorized_source is true when nothing in the scope answered the
+  // question.
+  bool no_authorized_source = 3;
+  repeated AnswerSegment segments = 4;
+  bool has_sensitive_source = 5;
+}
+
+// AnswerSegment attributes a span of the answer to its sources. start and end
+// are UTF-8 byte offsets into the answer; end is exclusive.
+message AnswerSegment {
+  int32 start = 1;
+  int32 end = 2;
+  repeated SegmentSource sources = 3;
+}
+
+message SegmentSource {
+  string policy_id = 1;
+  string version_id = 2;
+  string section_key = 3;
+  string chunk_id = 4;
+  int32 chunk_index = 5;
+}
+
+message Citation {
+  string policy_id = 1;
+  string policy_title = 2;
+  int32 version_no = 3;
+  string version_id = 4;
+  string section_key = 5;
+  string chunk_id = 6;
+  int32 chunk_index = 7;
+  // document_type is "POLICY" or "PROCEDURE".
+  string document_type = 8;
+}
+
+enum AssistOperation {
+  ASSIST_OPERATION_UNSPECIFIED = 0;
+  ASSIST_OPERATION_DRAFT = 1;
+  ASSIST_OPERATION_EXPAND = 2;
+  ASSIST_OPERATION_REWRITE = 3;
+  ASSIST_OPERATION_CLARIFY = 4;
+  ASSIST_OPERATION_SUMMARIZE = 5;
+}
+
+message AuthoringAssistRequest {
+  string policy_id = 1;
+  // version_id is the draft being edited.
+  string version_id = 2;
+  string section_key = 3;
+  // editable_content is the current text of the editable region.
+  string editable_content = 4;
+  // context_hint is read-only context: the section title or the locked text
+  // around the region.
+  string context_hint = 5;
+  AssistOperation operation = 6;
+  string instruction = 7;
+}
+
+message AuthoringAssistResponse {
+  string suggestion = 1;
+  string operation_id = 2;
+}
+
+// JobOperation is the kind of asynchronous job. RELATED_REEVAL and
+// RELATIONSHIP_LEARN are started by the service itself and refused from
+// SubmitAIJob.
+enum JobOperation {
+  JOB_OPERATION_UNSPECIFIED = 0;
+  // JOB_OPERATION_DRAFT drafts a whole policy from a brief and its template
+  // sections.
+  JOB_OPERATION_DRAFT = 1;
+  JOB_OPERATION_REWRITE = 2;
+  JOB_OPERATION_CLARIFY = 3;
+  JOB_OPERATION_SUMMARIZE = 4;
+  // JOB_OPERATION_REVIEW reviews a policy for gaps and issues.
+  JOB_OPERATION_REVIEW = 5;
+  // JOB_OPERATION_QA is SearchAndAnswer as a job.
+  JOB_OPERATION_QA = 6;
+  // JOB_OPERATION_REVISE revises an existing policy with every section as
+  // context, returning only the sections that change.
+  JOB_OPERATION_REVISE = 7;
+  // JOB_OPERATION_RELATED_REEVAL refreshes the suggested related policies of
+  // the policies a publish moved. No model call.
+  JOB_OPERATION_RELATED_REEVAL = 8;
+  // JOB_OPERATION_SUGGEST_ENRICHMENTS suggests related policies,
+  // definitions and references for an existing document. References come
+  // from the retrieved sources only.
+  JOB_OPERATION_SUGGEST_ENRICHMENTS = 9;
+  // JOB_OPERATION_RELATIONSHIP_LEARN rebuilds the weighted relationship
+  // table from usage, centroids, cross-references and shared entities. No
+  // model call.
+  JOB_OPERATION_RELATIONSHIP_LEARN = 10;
+}
+
+enum JobPhase {
+  JOB_PHASE_UNSPECIFIED = 0;
+  JOB_PHASE_PENDING = 1;
+  JOB_PHASE_RUNNING = 2;
+  JOB_PHASE_SUCCEEDED = 3;
+  JOB_PHASE_FAILED = 4;
+}
+
+message SubmitAIJobRequest {
+  // category_id is the owning category, carried for audit.
+  string category_id = 1;
+  // scope is the read scope a QA or enrichment job retrieves under.
+  ReadScope scope = 2;
+  // policy_id may be empty for a document not created yet.
+  string policy_id = 3;
+  string version_id = 4;
+  JobOperation operation = 5;
+  // input_json is the operation's payload as JSON; each operation defines
+  // its own shape (see docs/api.md).
+  string input_json = 6;
+}
+
+message SubmitAIJobResponse {
+  string job_id = 1;
+}
+
+message GetAIJobRequest {
+  string job_id = 1;
+}
+
+message GetAIJobResponse {
+  JobPhase phase = 1;
+  // result_ref is the cache key of the result, set once the job succeeded.
+  string result_ref = 2;
+  string error = 3;
+  // started_at and finished_at are RFC 3339; empty until reached.
+  string started_at = 4;
+  string finished_at = 5;
+  // qa_result is set for a succeeded QA job.
+  QaJobResult qa_result = 6;
+}
+
+message QaJobResult {
+  string answer = 1;
+  repeated Citation citations = 2;
+  bool no_authorized_source = 3;
+  bool has_sensitive_source = 4;
+  repeated AnswerSegment segments = 5;
+}
+
+message GetProviderStatusRequest {}
+
+message GetProviderStatusResponse {
+  // available is false once a real call failed, until the next success.
+  bool available = 1;
+  // reason is "auth_failed", "provider_error" or "not_configured" when not
+  // available.
+  string reason = 2;
+}
+
+message GetAIEnabledRequest {}
+
+message GetAIEnabledResponse {
+  bool enabled = 1;
+}
+
+message SetAIEnabledRequest {
+  bool enabled = 1;
+}
+
+message SetAIEnabledResponse {
+  bool enabled = 1;
+}
+
+// Provider is the generative provider an adapter talks to.
+enum Provider {
+  PROVIDER_UNSPECIFIED = 0;
+  PROVIDER_ANTHROPIC = 1;
+  PROVIDER_OPENAI = 2;
+  PROVIDER_AZURE_OPENAI = 3;
+  PROVIDER_GEMINI = 4;
+  PROVIDER_BEDROCK = 5;
+  // PROVIDER_OPENAI_COMPATIBLE is any endpoint speaking the OpenAI chat
+  // completions API, such as a self-hosted model server.
+  PROVIDER_OPENAI_COMPATIBLE = 6;
+}
+
+// DataNotice is the data notice an administrator must accept before the
+// module can be turned on.
+message DataNotice {
+  // current_version is the notice the service requires.
+  string current_version = 1;
+  // accepted_version is the last version accepted; empty if none.
+  string accepted_version = 2;
+  // accepted_by is the person who accepted it.
+  string accepted_by = 3;
+  // accepted_at is RFC 3339.
+  string accepted_at = 4;
+}
+
+message AIConfig {
+  bool enabled = 1;
+  Provider provider = 2;
+  // model is the effective model: the stored one, or the provider default.
+  string model = 3;
+  // base_url is the endpoint for Azure OpenAI and OpenAI-compatible
+  // providers, or an override for the others.
+  string base_url = 4;
+  // region is the AWS region for Bedrock.
+  string region = 5;
+  // deployment is the Azure OpenAI deployment name.
+  string deployment = 6;
+  bool credential_set = 7;
+  // credential_last4 is the last four characters of the stored credential.
+  string credential_last4 = 8;
+  // embeddings_provider and embeddings_model are set at deployment and read
+  // here only.
+  string embeddings_provider = 9;
+  string embeddings_model = 10;
+  int32 top_k = 11;
+  // monthly_limit is the monthly request limit; zero is none.
+  int64 monthly_limit = 12;
+  DataNotice data_notice = 13;
+  string org_context = 14;
+}
+
+message GetAIConfigRequest {}
+
+message GetAIConfigResponse {
+  AIConfig config = 1;
+}
+
+message SetProviderConfigRequest {
+  Provider provider = 1;
+  // model empty uses the provider's default model.
+  string model = 2;
+  string base_url = 3;
+  string region = 4;
+  string deployment = 5;
+}
+
+message SetProviderConfigResponse {
+  AIConfig config = 1;
+}
+
+message SetProviderCredentialRequest {
+  string credential = 1;
+}
+
+message SetProviderCredentialResponse {
+  bool credential_set = 1;
+  string credential_last4 = 2;
+}
+
+message TestProviderRequest {}
+
+message TestProviderResponse {
+  bool ok = 1;
+  // reason is set when ok is false, with the same values as
+  // GetProviderStatusResponse.reason.
+  string reason = 2;
+  int64 latency_ms = 3;
+}
+
+message AcceptDataNoticeRequest {
+  // notice_version must equal the current version.
+  string notice_version = 1;
+}
+
+message AcceptDataNoticeResponse {
+  DataNotice data_notice = 1;
+}
+
+message SetMonthlyLimitRequest {
+  // limit is the number of provider requests allowed per calendar month
+  // (UTC); zero removes the limit.
+  int64 limit = 1;
+}
+
+message SetMonthlyLimitResponse {
+  int64 limit = 1;
+}
+
+message GetUsageRequest {}
+
+message GetUsageResponse {
+  // month is the calendar month in UTC, as YYYY-MM.
+  string month = 1;
+  int64 requests = 2;
+  int64 input_tokens = 3;
+  int64 output_tokens = 4;
+  int64 monthly_limit = 5;
+  // resets_at is the start of next month, RFC 3339.
+  string resets_at = 6;
+}
+
+message SetOrgContextRequest {
+  string org_context = 1;
+}
+
+message SetOrgContextResponse {
+  string org_context = 1;
+}
+
+message GetTopQuestionsRequest {
+  // limit caps the questions returned; zero uses the default.
+  int32 limit = 1;
+}
+
+message GetTopQuestionsResponse {
+  repeated string questions = 1;
+}
+
+message GetPolicySummaryRequest {
+  string version_id = 1;
+}
+
+message GetPolicySummaryResponse {
+  bool found = 1;
+  string summary_text = 2;
+  // generated_at is RFC 3339; empty when not found.
+  string generated_at = 3;
+}
+
+message SetAIRetrievalConfigRequest {
+  // top_k zero clears the override (the default is 50).
+  int32 top_k = 1;
+}
+
+message SetAIRetrievalConfigResponse {
+  int32 top_k = 1;
+}
+
+message SetUserAiQueryLimitRequest {
+  string target_user_id = 1;
+  // limit is queries per day: 1 or more sets it, 0 clears the override and
+  // -1 is unlimited.
+  int32 limit = 2;
+}
+
+message SetUserAiQueryLimitResponse {
+  // effective_limit is the person's limit now; meaningless when unlimited.
+  int32 effective_limit = 1;
+  bool unlimited = 2;
+  // is_default is true when the person has no override.
+  bool is_default = 3;
+}
+
+message GetRelatedPoliciesRequest {
+  string policy_id = 1;
+  // top_n caps the results; zero uses the default.
+  int32 top_n = 2;
+  ReadScope scope = 3;
+}
+
+message GetRelatedPoliciesResponse {
+  repeated RelatedPolicy related = 1;
+}
+
+message RelatedPolicy {
+  string policy_id = 1;
+  string policy_title = 2;
+  string category_id = 3;
+  // version_no is the published version the policy's centroid came from.
+  int32 version_no = 4;
+  // distance is the cosine distance between the centroids; lower is closer.
+  float distance = 5;
+}
