@@ -1,0 +1,68 @@
+{
+  "description": "A refused API key.",
+  "reference": "https://docs.anthropic.com/en/api/errors",
+  "call": {
+    "settings": {
+      "credential": "test-key-1",
+      "model": "claude-sonnet-4-6"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/v1/messages",
+        "auth_header": "x-api-key",
+        "auth_value": "test-key-1",
+        "headers": {
+          "anthropic-version": "2023-06-01"
+        },
+        "body": {
+          "model": "claude-sonnet-4-6",
+          "max_tokens": 2048,
+          "stream": true,
+          "system": [
+            {
+              "type": "text",
+              "text": "You answer questions about the organisation's policies.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "How long are access logs kept?"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "type": "error",
+          "error": {
+            "type": "authentication_error",
+            "message": "invalid x-api-key"
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "auth"
+  }
+}

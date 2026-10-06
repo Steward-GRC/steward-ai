@@ -1,0 +1,60 @@
+{
+  "description": "An error on the provider's side.",
+  "reference": "https://platform.openai.com/docs/guides/error-codes",
+  "call": {
+    "settings": {
+      "kind": "openai",
+      "model": "gpt-4.1",
+      "credential": "test-key-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/chat/completions",
+        "auth_header": "Authorization",
+        "auth_value": "Bearer test-key-1",
+        "body": {
+          "model": "gpt-4.1",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You answer questions about the organisation's policies."
+            },
+            {
+              "role": "user",
+              "content": "How long are access logs kept?"
+            }
+          ],
+          "max_completion_tokens": 2048
+        },
+        "body_absent": [
+          "max_tokens",
+          "stream"
+        ]
+      },
+      "response": {
+        "status": 500,
+        "body": {
+          "error": {
+            "message": "The server had an error while processing your request.",
+            "type": "server_error",
+            "param": null,
+            "code": null
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "provider"
+  }
+}

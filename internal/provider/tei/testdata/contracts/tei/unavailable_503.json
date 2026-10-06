@@ -1,0 +1,38 @@
+{
+  "description": "The server is not ready yet, answered by the proxy in front of it.",
+  "reference": "https://huggingface.github.io/text-embeddings-inference/",
+  "call": {
+    "settings": {
+      "kind": "tei"
+    },
+    "inputs": [
+      "Access control policy",
+      "Retention schedule"
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/embed",
+        "headers_absent": [
+          "Authorization"
+        ],
+        "body": {
+          "inputs": [
+            "Access control policy",
+            "Retention schedule"
+          ],
+          "truncate": true
+        }
+      },
+      "response": {
+        "status": 503,
+        "body_text": "no healthy upstream"
+      }
+    }
+  ],
+  "expect": {
+    "error": "provider"
+  }
+}

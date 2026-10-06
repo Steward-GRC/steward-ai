@@ -1,0 +1,84 @@
+{
+  "description": "A Converse call signed with static keys, with token usage including a cache read.",
+  "reference": "https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html",
+  "call": {
+    "settings": {
+      "kind": "bedrock",
+      "model": "amazon.nova-pro-v1:0",
+      "region": "us-east-1",
+      "credential": "placeholder-access-key-0001:test-secret-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/model/amazon.nova-pro-v1:0/converse",
+        "auth_header": "Authorization",
+        "auth_prefix": "AWS4-HMAC-SHA256 Credential=placeholder-access-key-0001/",
+        "body": {
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "text": "How long are access logs kept?"
+                }
+              ]
+            }
+          ],
+          "system": [
+            {
+              "text": "You answer questions about the organisation's policies."
+            }
+          ],
+          "inferenceConfig": {
+            "maxTokens": 2048
+          }
+        },
+        "body_absent": [
+          "modelId",
+          "toolConfig"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "output": {
+            "message": {
+              "role": "assistant",
+              "content": [
+                {
+                  "text": "Access logs are kept for 90 days."
+                }
+              ]
+            }
+          },
+          "stopReason": "end_turn",
+          "usage": {
+            "inputTokens": 30,
+            "outputTokens": 9,
+            "totalTokens": 539,
+            "cacheReadInputTokens": 500,
+            "cacheWriteInputTokens": 0
+          },
+          "metrics": {
+            "latencyMs": 420
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "text": "Access logs are kept for 90 days.",
+    "input_tokens": 530,
+    "output_tokens": 9
+  }
+}

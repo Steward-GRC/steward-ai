@@ -1,0 +1,108 @@
+{
+  "description": "A completion with a system instruction, a model turn and token usage.",
+  "reference": "https://ai.google.dev/api/generate-content",
+  "call": {
+    "settings": {
+      "kind": "gemini",
+      "model": "gemini-2.5-flash",
+      "credential": "test-key-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      },
+      {
+        "role": "assistant",
+        "content": "Which logs do you mean?"
+      },
+      {
+        "role": "user",
+        "content": "Access logs."
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/models/gemini-2.5-flash:generateContent",
+        "auth_header": "x-goog-api-key",
+        "auth_value": "test-key-1",
+        "headers_absent": [
+          "Authorization"
+        ],
+        "body": {
+          "systemInstruction": {
+            "parts": [
+              {
+                "text": "You answer questions about the organisation's policies."
+              }
+            ]
+          },
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "How long are access logs kept?"
+                }
+              ]
+            },
+            {
+              "role": "model",
+              "parts": [
+                {
+                  "text": "Which logs do you mean?"
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Access logs."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 2048
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "candidates": [
+            {
+              "content": {
+                "parts": [
+                  {
+                    "text": "Access logs are kept for 90 days."
+                  }
+                ],
+                "role": "model"
+              },
+              "finishReason": "STOP",
+              "index": 0
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 52,
+            "candidatesTokenCount": 10,
+            "totalTokenCount": 62
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "resp-Example01"
+        }
+      }
+    }
+  ],
+  "expect": {
+    "text": "Access logs are kept for 90 days.",
+    "input_tokens": 52,
+    "output_tokens": 10
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "description": "A refused key.",
+  "reference": "https://learn.microsoft.com/en-us/azure/ai-foundry/openai/reference",
+  "call": {
+    "settings": {
+      "kind": "azure_openai",
+      "deployment": "policy-chat",
+      "credential": "test-key-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/openai/deployments/policy-chat/chat/completions",
+        "query": {
+          "api-version": "2024-10-21"
+        },
+        "auth_header": "api-key",
+        "auth_value": "test-key-1",
+        "body": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You answer questions about the organisation's policies."
+            },
+            {
+              "role": "user",
+              "content": "How long are access logs kept?"
+            }
+          ],
+          "max_completion_tokens": 2048
+        },
+        "body_absent": [
+          "model",
+          "max_tokens"
+        ]
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "401",
+            "message": "Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource."
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "auth"
+  }
+}

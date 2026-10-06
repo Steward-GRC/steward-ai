@@ -1,0 +1,41 @@
+{
+  "description": "The model backend failed.",
+  "reference": "https://huggingface.github.io/text-embeddings-inference/",
+  "call": {
+    "settings": {
+      "kind": "tei"
+    },
+    "inputs": [
+      "Access control policy",
+      "Retention schedule"
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/embed",
+        "headers_absent": [
+          "Authorization"
+        ],
+        "body": {
+          "inputs": [
+            "Access control policy",
+            "Retention schedule"
+          ],
+          "truncate": true
+        }
+      },
+      "response": {
+        "status": 424,
+        "body": {
+          "error": "Inference failed",
+          "error_type": "backend"
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "provider"
+  }
+}
