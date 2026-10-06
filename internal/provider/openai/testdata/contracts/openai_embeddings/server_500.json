@@ -1,0 +1,48 @@
+{
+  "description": "An error on the provider's side.",
+  "reference": "https://platform.openai.com/docs/guides/error-codes",
+  "call": {
+    "settings": {
+      "kind": "openai",
+      "model": "text-embedding-3-small",
+      "credential": "test-key-1"
+    },
+    "inputs": [
+      "Access control policy",
+      "Retention schedule"
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/embeddings",
+        "auth_header": "Authorization",
+        "auth_value": "Bearer test-key-1",
+        "body": {
+          "model": "text-embedding-3-small",
+          "input": [
+            "Access control policy",
+            "Retention schedule"
+          ],
+          "dimensions": 384,
+          "encoding_format": "float"
+        }
+      },
+      "response": {
+        "status": 500,
+        "body": {
+          "error": {
+            "message": "The server had an error while processing your request.",
+            "type": "server_error",
+            "param": null,
+            "code": null
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "provider"
+  }
+}

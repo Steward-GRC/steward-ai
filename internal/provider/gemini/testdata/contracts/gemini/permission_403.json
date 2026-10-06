@@ -1,0 +1,90 @@
+{
+  "description": "A key without permission.",
+  "reference": "https://ai.google.dev/gemini-api/docs/troubleshooting",
+  "call": {
+    "settings": {
+      "kind": "gemini",
+      "model": "gemini-2.5-flash",
+      "credential": "test-key-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      },
+      {
+        "role": "assistant",
+        "content": "Which logs do you mean?"
+      },
+      {
+        "role": "user",
+        "content": "Access logs."
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/models/gemini-2.5-flash:generateContent",
+        "auth_header": "x-goog-api-key",
+        "auth_value": "test-key-1",
+        "headers_absent": [
+          "Authorization"
+        ],
+        "body": {
+          "systemInstruction": {
+            "parts": [
+              {
+                "text": "You answer questions about the organisation's policies."
+              }
+            ]
+          },
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "How long are access logs kept?"
+                }
+              ]
+            },
+            {
+              "role": "model",
+              "parts": [
+                {
+                  "text": "Which logs do you mean?"
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Access logs."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 2048
+          }
+        }
+      },
+      "response": {
+        "status": 403,
+        "body": {
+          "error": {
+            "code": 403,
+            "message": "The caller does not have permission",
+            "status": "PERMISSION_DENIED"
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "auth"
+  }
+}

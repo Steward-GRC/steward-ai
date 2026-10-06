@@ -73,7 +73,7 @@ jobs:
           path: ${{ runner.temp }}/govulncheck/bin
           key: ${{ steps.govulncheck-cache.outputs.cache-primary-key }}
       - name: Run govulncheck
-        run: '"$RUNNER_TEMP/govulncheck/bin/govulncheck" ./...'
+        run: scripts/govulncheck.sh "$RUNNER_TEMP/govulncheck/bin/govulncheck"
 
   gosec:
     name: 🔐 Gosec

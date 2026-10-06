@@ -21,8 +21,9 @@ original service come over through `steward-migrate`.
 ## Read scope
 
 Every query that returns document content takes the caller's read scope and applies it in SQL: a
-row is readable when the scope reads every category, or the row's category is in the scope and it
-is standard or the scope includes sensitive documents. `airules.ChunkReadable` states the same rule
+row is readable when its category is in the scope (or the scope reads every category) and it is
+standard or the scope includes sensitive documents; reading every category never opens sensitive
+documents on its own. `airules.ChunkReadable` states the same rule
 in Go. Top questions are suggested only when every policy the answer cited is readable.
 
 ## Settings and the credential

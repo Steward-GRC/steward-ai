@@ -1,0 +1,85 @@
+{
+  "description": "The request's model overrides the configured one.",
+  "reference": "https://platform.openai.com/docs/api-reference/chat/create",
+  "call": {
+    "settings": {
+      "kind": "openai",
+      "model": "gpt-4.1",
+      "credential": "test-key-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ],
+    "model": "gpt-4.1-mini",
+    "max_tokens": 512
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/chat/completions",
+        "auth_header": "Authorization",
+        "auth_value": "Bearer test-key-1",
+        "body": {
+          "model": "gpt-4.1-mini",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You answer questions about the organisation's policies."
+            },
+            {
+              "role": "user",
+              "content": "How long are access logs kept?"
+            }
+          ],
+          "max_completion_tokens": 512
+        },
+        "body_absent": [
+          "max_tokens",
+          "stream"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "chatcmpl-Example01",
+          "object": "chat.completion",
+          "created": 1791200000,
+          "model": "gpt-4.1-mini",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Access logs are kept for 90 days.",
+                "refusal": null
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 31,
+            "completion_tokens": 9,
+            "total_tokens": 40,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "text": "Access logs are kept for 90 days.",
+    "input_tokens": 31,
+    "output_tokens": 9
+  }
+}

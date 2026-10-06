@@ -1,0 +1,66 @@
+{
+  "description": "The service is unavailable.",
+  "reference": "https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html",
+  "call": {
+    "settings": {
+      "kind": "bedrock",
+      "model": "amazon.nova-pro-v1:0",
+      "region": "us-east-1",
+      "credential": "placeholder-access-key-0001:test-secret-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/model/amazon.nova-pro-v1:0/converse",
+        "auth_header": "Authorization",
+        "auth_prefix": "AWS4-HMAC-SHA256 Credential=placeholder-access-key-0001/",
+        "body": {
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "text": "How long are access logs kept?"
+                }
+              ]
+            }
+          ],
+          "system": [
+            {
+              "text": "You answer questions about the organisation's policies."
+            }
+          ],
+          "inferenceConfig": {
+            "maxTokens": 2048
+          }
+        },
+        "body_absent": [
+          "modelId",
+          "toolConfig"
+        ]
+      },
+      "response": {
+        "status": 503,
+        "headers": {
+          "Content-Type": "application/json",
+          "x-amzn-ErrorType": "ServiceUnavailableException:http://internal.amazon.com/coral/com.amazon.bedrock/"
+        },
+        "body": {
+          "message": "The service isn't currently available."
+        }
+      }
+    }
+  ],
+  "expect": {
+    "error": "provider"
+  }
+}

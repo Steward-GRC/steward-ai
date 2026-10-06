@@ -1,0 +1,39 @@
+{
+  "description": "A refused API key.",
+  "reference": "https://huggingface.github.io/text-embeddings-inference/",
+  "call": {
+    "settings": {
+      "kind": "tei",
+      "credential": "test-key-1"
+    },
+    "inputs": [
+      "Access control policy",
+      "Retention schedule"
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/embed",
+        "headers_absent": [],
+        "body": {
+          "inputs": [
+            "Access control policy",
+            "Retention schedule"
+          ],
+          "truncate": true
+        },
+        "auth_header": "Authorization",
+        "auth_value": "Bearer test-key-1"
+      },
+      "response": {
+        "status": 401,
+        "body_text": "Unauthorized"
+      }
+    }
+  ],
+  "expect": {
+    "error": "auth"
+  }
+}

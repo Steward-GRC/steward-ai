@@ -69,7 +69,7 @@ WHERE no_authorized_source = false AND has_sensitive_source = false
       FROM jsonb_array_elements(q.citations_json) AS elem
       LEFT JOIN ai_policy_centroids c ON c.policy_id = elem->>'policyId'
       WHERE c.policy_id IS NULL
-         OR NOT ($2 OR (c.category_id = ANY($3) AND (c.sensitivity = 'standard' OR $4)))
+         OR NOT (($2 OR c.category_id = ANY($3)) AND (c.sensitivity = 'standard' OR $4))
   )
 GROUP BY question_text
 ORDER BY SUM(ask_count) DESC, MAX(created_at) DESC

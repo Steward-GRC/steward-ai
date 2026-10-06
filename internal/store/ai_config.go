@@ -12,7 +12,7 @@ import (
 )
 
 // credentialName binds the sealed credential to its column.
-const credentialName = "ai_config.credential"
+const credentialName = "ai_config.credential" // #nosec G101 -- the column name used as AEAD additional data, not a secret
 
 // credentialLast4Len is how many trailing characters are kept for display.
 const credentialLast4Len = 4

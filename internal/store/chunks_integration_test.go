@@ -465,9 +465,9 @@ func TestSearchByCosine_standardOutsideScopeIsHidden(t *testing.T) {
 }
 
 // TestSearchByCosine_sensitiveRequiresGroupAndIncludeSensitive verifies the
-// sensitive-chunk gate is the conjunction of BOTH IncludeSensitive and group
-// membership — neither alone is sufficient (and SiteAdmin bypasses both, see
-// TestSearchByCosine_allCategoriesSeesEverything).
+// sensitive-chunk gate is the conjunction of BOTH IncludeSensitive and category
+// scope — neither alone is sufficient (AllCategories lifts only the category
+// filter, see TestSearchByCosine_allCategoriesNeedsIncludeSensitive).
 func TestSearchByCosine_sensitiveRequiresGroupAndIncludeSensitive(t *testing.T) {
 	pool := newTestDB(t)
 	repo := store.NewChunkStore(pool)
@@ -507,10 +507,10 @@ func TestSearchByCosine_sensitiveRequiresGroupAndIncludeSensitive(t *testing.T) 
 	}
 }
 
-// TestSearchByCosine_allCategoriesSeesEverything: AllCategories bypasses the
-// category filter and the sensitivity gate, so a scope with no categories and
-// IncludeSensitive=false still sees a sensitive chunk.
-func TestSearchByCosine_allCategoriesSeesEverything(t *testing.T) {
+// TestSearchByCosine_allCategoriesNeedsIncludeSensitive: AllCategories
+// lifts the category filter but not the sensitivity gate, as in
+// steward-authz, so a sensitive chunk needs IncludeSensitive too.
+func TestSearchByCosine_allCategoriesNeedsIncludeSensitive(t *testing.T) {
 	pool := newTestDB(t)
 	repo := store.NewChunkStore(pool)
 	ctx := context.Background()
@@ -523,18 +523,18 @@ func TestSearchByCosine_allCategoriesSeesEverything(t *testing.T) {
 		t.Fatalf("seed: %v", err)
 	}
 
-	results, err := repo.SearchByCosine(ctx, makeEmbedding(0), 10, store.AccessFilter{
-		CategoryIDs:      nil,
-		IncludeSensitive: false,
-		AllCategories:    true,
-	})
+	results, err := repo.SearchByCosine(ctx, makeEmbedding(0), 10, store.AccessFilter{AllCategories: true})
+	if err != nil {
+		t.Fatalf("SearchByCosine: %v", err)
+	}
+	if len(results) != 0 {
+		t.Fatalf("all categories alone must not open a sensitive chunk, got %+v", results)
+	}
+	results, err = repo.SearchByCosine(ctx, makeEmbedding(0), 10, store.AccessFilter{AllCategories: true, IncludeSensitive: true})
 	if err != nil {
 		t.Fatalf("SearchByCosine: %v", err)
 	}
 	if len(results) != 1 {
-		t.Fatalf("expected the all-categories scope to see the sensitive, out-of-scope chunk, got %d results", len(results))
-	}
-	if results[0].ContentText != "exec comp detail" {
-		t.Fatalf("unexpected result: %+v", results[0])
+		t.Fatalf("expected the sensitive chunk with all categories and the sensitive grant, got %d results", len(results))
 	}
 }

@@ -141,7 +141,7 @@ func TestRelatedPolicies_appliesAccessFilterToNeighbors(t *testing.T) {
 	}
 
 	// An all-categories scope sees every neighbor.
-	adminResults, err := repo.RelatedPolicies(ctx, "anchor", store.AccessFilter{AllCategories: true}, 10)
+	adminResults, err := repo.RelatedPolicies(ctx, "anchor", store.AccessFilter{AllCategories: true, IncludeSensitive: true}, 10)
 	if err != nil {
 		t.Fatalf("RelatedPolicies (admin): %v", err)
 	}

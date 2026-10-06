@@ -200,7 +200,7 @@ func TestRelatedPolicies_PrecomputedAccessFilters(t *testing.T) {
 	}
 
 	// All categories: sees both.
-	admin, err := cs.RelatedPolicies(ctx, "p1", store.AccessFilter{AllCategories: true}, 10)
+	admin, err := cs.RelatedPolicies(ctx, "p1", store.AccessFilter{AllCategories: true, IncludeSensitive: true}, 10)
 	if err != nil {
 		t.Fatalf("RelatedPolicies (admin): %v", err)
 	}

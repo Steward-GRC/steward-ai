@@ -7,9 +7,10 @@
 // The rules:
 //
 //   - Read access (ChunkReadable, store.AccessFilter): a document is readable
-//     when the scope reads every category, or the document's category is in
-//     the scope and it is standard or the scope includes sensitive
-//     documents. The rule runs inside the SQL; ChunkReadable states it in Go.
+//     when its category is in the scope (or the scope reads every category)
+//     and it is standard or the scope includes sensitive documents. Reading
+//     every category never opens sensitive documents on its own, as in
+//     steward-authz. The rule runs inside the SQL; ChunkReadable states it in Go.
 //   - Off is off: while the module is off no intake call is accepted and
 //     nothing calls a provider. A settings read failure refuses the call
 //     rather than run with the module possibly off.
@@ -68,10 +69,7 @@ func EffectiveQueryQuota(override int, hasOverride bool, defaultLimit int) (limi
 // documentation and parity tests. It is not called on the query path:
 // filtering in Go would mean fetching unreadable rows first.
 func ChunkReadable(sensitivity string, allCategories, includeSensitive bool, categoryID string, categoryIDs []string) bool {
-	if allCategories {
-		return true
-	}
-	if !slices.Contains(categoryIDs, categoryID) {
+	if !allCategories && !slices.Contains(categoryIDs, categoryID) {
 		return false
 	}
 	return sensitivity == SensitivityStandard || includeSensitive

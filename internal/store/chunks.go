@@ -51,8 +51,9 @@ type SearchResult struct {
 }
 
 // AccessFilter is the read scope a query runs under. A row is readable when
-// AllCategories is set, or its category is in CategoryIDs and it is standard
-// or IncludeSensitive is set. airules.ChunkReadable states the same rule in
+// its category is in CategoryIDs (or AllCategories is set), and it is
+// standard or IncludeSensitive is set. AllCategories never opens sensitive
+// documents on its own. airules.ChunkReadable states the same rule in
 // Go; the SQL predicates here must stay in step with it.
 type AccessFilter struct {
 	CategoryIDs      []string
@@ -138,8 +139,8 @@ func (s *ChunkStore) SearchByCosine(
 		       content_text, category_id, sensitivity, policy_title, document_type,
 		       (embedding <=> $1::vector) AS distance
 		FROM ai_chunks
-		WHERE $4
-		   OR (category_id = ANY($2) AND (sensitivity = 'standard' OR $5))
+		WHERE ($4 OR category_id = ANY($2))
+		  AND (sensitivity = 'standard' OR $5)
 		ORDER BY embedding <=> $1::vector
 		LIMIT $3
 	`,
@@ -206,8 +207,8 @@ func (s *ChunkStore) SearchHybrid(
 			       ts_rank(to_tsvector('english', content_text),
 			               websearch_to_tsquery('english', $6)) AS kw_rank
 			FROM ai_chunks
-			WHERE $4
-			   OR (category_id = ANY($2) AND (sensitivity = 'standard' OR $5))
+			WHERE ($4 OR category_id = ANY($2))
+			  AND (sensitivity = 'standard' OR $5)
 		),
 		ranked AS (
 			SELECT *,

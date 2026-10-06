@@ -294,7 +294,7 @@ func (Provider) EnumDescriptor() ([]byte, []int) {
 // ReadScope is what the person asking may read, bound by the gateway.
 // Standard documents are readable in the listed categories; sensitive
 // documents also need include_sensitive. all_categories reads every
-// document, sensitive ones included.
+// category; sensitive documents in them still need include_sensitive.
 type ReadScope struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	CategoryIds      []string               `protobuf:"bytes,1,rep,name=category_ids,json=categoryIds,proto3" json:"category_ids,omitempty"`

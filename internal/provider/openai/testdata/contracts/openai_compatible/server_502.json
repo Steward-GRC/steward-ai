@@ -1,0 +1,55 @@
+{
+  "description": "A gateway error in front of the server.",
+  "reference": "https://platform.openai.com/docs/api-reference/chat/create",
+  "call": {
+    "settings": {
+      "kind": "openai_compatible",
+      "model": "llama-3.3-70b-instruct",
+      "credential": "test-key-1"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/chat/completions",
+        "body": {
+          "model": "llama-3.3-70b-instruct",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You answer questions about the organisation's policies."
+            },
+            {
+              "role": "user",
+              "content": "How long are access logs kept?"
+            }
+          ],
+          "max_tokens": 2048
+        },
+        "body_absent": [
+          "max_completion_tokens"
+        ],
+        "auth_header": "Authorization",
+        "auth_value": "Bearer test-key-1"
+      },
+      "response": {
+        "status": 502,
+        "headers": {
+          "Content-Type": "text/html"
+        },
+        "body_text": "<html><body>502 Bad Gateway</body></html>"
+      }
+    }
+  ],
+  "expect": {
+    "error": "provider"
+  }
+}

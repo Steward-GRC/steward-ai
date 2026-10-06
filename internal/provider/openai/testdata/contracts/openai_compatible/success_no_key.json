@@ -1,0 +1,82 @@
+{
+  "description": "A compatible server without a key.",
+  "reference": "https://platform.openai.com/docs/api-reference/chat/create",
+  "call": {
+    "settings": {
+      "kind": "openai_compatible",
+      "model": "llama-3.3-70b-instruct"
+    },
+    "system": "You answer questions about the organisation's policies.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How long are access logs kept?"
+      }
+    ]
+  },
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/chat/completions",
+        "body": {
+          "model": "llama-3.3-70b-instruct",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You answer questions about the organisation's policies."
+            },
+            {
+              "role": "user",
+              "content": "How long are access logs kept?"
+            }
+          ],
+          "max_tokens": 2048
+        },
+        "body_absent": [
+          "max_completion_tokens"
+        ],
+        "headers_absent": [
+          "Authorization"
+        ]
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "chatcmpl-Example01",
+          "object": "chat.completion",
+          "created": 1791200000,
+          "model": "llama-3.3-70b-instruct",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Access logs are kept for 90 days.",
+                "refusal": null
+              },
+              "logprobs": null,
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 40,
+            "completion_tokens": 9,
+            "total_tokens": 49,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "expect": {
+    "text": "Access logs are kept for 90 days.",
+    "input_tokens": 40,
+    "output_tokens": 9
+  }
+}
