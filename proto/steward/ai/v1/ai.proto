@@ -83,7 +83,7 @@ service AiService {
 // ReadScope is what the person asking may read, bound by the gateway.
 // Standard documents are readable in the listed categories; sensitive
 // documents also need include_sensitive. all_categories reads every
-// document, sensitive ones included.
+// category; sensitive documents in them still need include_sensitive.
 message ReadScope {
   repeated string category_ids = 1;
   bool include_sensitive = 2;

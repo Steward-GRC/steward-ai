@@ -234,8 +234,8 @@ func (s *CentroidStore) relatedFromPrecomputed(
 		JOIN ai_policy_centroids c ON c.policy_id = r.related_id
 		WHERE r.policy_id = $1
 		  AND r.status = 'suggested'
-		  AND ($3
-		       OR (c.category_id = ANY($2) AND (c.sensitivity = 'standard' OR $4)))
+		  AND ($3 OR c.category_id = ANY($2))
+		  AND (c.sensitivity = 'standard' OR $4)
 		ORDER BY r.score DESC
 		LIMIT $5
 	`,
@@ -301,8 +301,8 @@ func (s *CentroidStore) NeighborsByCentroid(
 			SELECT centroid FROM ai_policy_centroids WHERE policy_id = $1
 		) AS self
 		WHERE c.policy_id <> $1
-		  AND ($3
-		       OR (c.category_id = ANY($2) AND (c.sensitivity = 'standard' OR $4)))
+		  AND ($3 OR c.category_id = ANY($2))
+		  AND (c.sensitivity = 'standard' OR $4)
 		ORDER BY c.centroid <=> self.centroid
 		LIMIT $5
 	`,

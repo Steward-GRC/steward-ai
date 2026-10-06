@@ -24,7 +24,9 @@ func TestChunkReadable(t *testing.T) {
 		{"sensitive outside the scope", SensitivitySensitive, false, true, "hr", []string{"finance"}, false},
 		{"sensitive in scope with the grant", SensitivitySensitive, false, true, "hr", []string{"hr"}, true},
 		{"sensitive with an empty scope", SensitivitySensitive, false, true, "hr", []string{}, false},
-		{"all categories reads everything", SensitivitySensitive, true, false, "hr", nil, true},
+		{"all categories reads standard anywhere", SensitivityStandard, true, false, "hr", nil, true},
+		{"all categories alone doesn't open sensitive", SensitivitySensitive, true, false, "hr", nil, false},
+		{"all categories with the sensitive grant", SensitivitySensitive, true, true, "hr", nil, true},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
