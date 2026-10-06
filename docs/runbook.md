@@ -32,6 +32,9 @@ and `readiness`), fail while a required dependency is down:
 Pings are short and cached for a few seconds, so readiness recovers on its own when the dependency
 returns. The `liveness` gRPC service name reports the process only.
 
+While `jwks` is down, every call that needs a caller token is refused with `Unavailable:
+workload verifier unavailable`. A `status 401` in the `JWKS refresh failed` log line means the API server refused `WORKLOAD_OIDC_BEARER_FILE`: it must hold a token with the API server's own audience, not the `steward` caller token.
+
 ## Build information
 
 Every `Health/Check` answer carries `steward-version`, `steward-commit`, and
