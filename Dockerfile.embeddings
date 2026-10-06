@@ -1,0 +1,45 @@
+# syntax=docker/dockerfile:1
+# The built-in embeddings server: Hugging Face Text Embeddings Inference with
+# the BAAI/bge-small-en-v1.5 weights (384 dimensions, the schema's width)
+# baked in at build time, so it starts and runs with no network access.
+#
+#   docker build -f Dockerfile.embeddings -t <image> .
+#
+# Run it with: --model-id /models/bge-small-en-v1.5 --port 80
+
+ARG MODEL_ID=BAAI/bge-small-en-v1.5
+ARG MODEL_DIR=bge-small-en-v1.5
+
+FROM python:3.12-slim AS model-fetch
+ARG MODEL_ID
+ARG MODEL_DIR
+RUN pip install --no-cache-dir "huggingface_hub==0.26.*"
+# The CPU image loads this model through its ONNX backend, so onnx/model.onnx
+# is required; the duplicate PyTorch weights are skipped.
+RUN python -c "\
+from huggingface_hub import snapshot_download; \
+snapshot_download( \
+    repo_id='${MODEL_ID}', \
+    local_dir='/models/${MODEL_DIR}', \
+    allow_patterns=['*.json', '*.txt', '*.safetensors', '1_Pooling/*', 'onnx/model.onnx'], \
+    ignore_patterns=['*.bin', '*.ot', '*.h5', '*.msgpack', 'openvino/*'], \
+)" \
+    && test -f "/models/${MODEL_DIR}/model.safetensors" \
+    && test -f "/models/${MODEL_DIR}/tokenizer.json" \
+    && test -f "/models/${MODEL_DIR}/onnx/model.onnx"
+
+FROM ghcr.io/huggingface/text-embeddings-inference:cpu-1.5
+ARG MODEL_DIR
+# The vendor image lags its base's security updates. SECURITY_REFRESH is part
+# of this layer's cache key: CI passes a fresh value so the upgrade runs on
+# every build instead of replaying a stale cached layer.
+ARG SECURITY_REFRESH=0
+RUN echo "security refresh: ${SECURITY_REFRESH}" \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=model-fetch /models/${MODEL_DIR} /models/${MODEL_DIR}
+# World-readable so a non-root user with a read-only root filesystem can load
+# the weights.
+RUN chmod -R a+rX /models
+ENV HF_HUB_OFFLINE=1
