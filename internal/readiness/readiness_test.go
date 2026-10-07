@@ -205,3 +205,21 @@ func TestRecheckEveryKeepsASuccessAndRetriesAFailure(t *testing.T) {
 	fail.Store(false)
 	require.NoError(t, check(ctx))
 }
+
+func TestJobsAPIIsOptional(t *testing.T) {
+	k := &switchable{}
+	d := base()
+	d.Jobs = k.check
+	c := checker(t, d)
+	r := c.Report(context.Background())
+	require.True(t, r.Ready)
+	require.Equal(t, health.StateOK, r.Status)
+	require.False(t, dep(t, r, readiness.Kubernetes).Required, "only the job endpoints need the API server")
+
+	k.down.Store(true)
+	require.Eventually(t, func() bool {
+		r := c.Report(context.Background())
+		return r.Ready && r.Status == health.StateDegraded
+	}, 2*time.Second, 5*time.Millisecond)
+	require.Equal(t, health.StateDegraded, dep(t, c.Report(context.Background()), readiness.Kubernetes).State)
+}

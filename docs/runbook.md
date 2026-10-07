@@ -13,6 +13,14 @@ updates and deletes them there, and holds a Lease for leader election. Both need
 `policyaijobs.ai.steward-grc.com` (and the status subresource) in that namespace; the release
 charts carry it.
 
+The server starts without the API server (no in-cluster config, for example with the service
+account token not mounted). It logs `no Kubernetes API: AI jobs and related-policy re-evaluation
+are off`, refuses `SubmitAIJob` and `GetAIJob` with `AI_JOBS_UNAVAILABLE`, and reports
+`kubernetes` degraded with the reason. With a client, readiness reads a job that doesn't exist:
+anything but a not-found (the API server down, the CRD not installed, the Role missing `get`)
+reports `kubernetes` degraded until it is fixed. Answers, assist, settings and stored results keep
+serving either way.
+
 ## Probes
 
 `/livez` reports the process only. `/readyz`, and the gRPC `grpc.health.v1` check (the empty name
@@ -25,6 +33,7 @@ and `readiness`), fail while a required dependency is down:
 | `valkey` | yes | yes | yes |
 | `jwks` (while `WORKLOAD_AUTH` is on) | yes | yes | no |
 | `kubernetes` (the API server) | yes | no | yes |
+| `kubernetes` (the server's PolicyAIJob access) | no, degraded | yes | no |
 | `embeddings` | no, degraded | yes | yes |
 | `provider` (last known status, never a probe call) | no, degraded | yes | yes |
 | `workloadauth` (only while `WORKLOAD_AUTH=disabled`) | no, degraded | yes | no |

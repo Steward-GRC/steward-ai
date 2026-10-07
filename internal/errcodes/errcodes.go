@@ -7,6 +7,7 @@ package errcodes
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	apperr "github.com/Bugs5382/go-apperr"
@@ -32,6 +33,7 @@ const (
 	CodeJobNotFound           = 3010
 	CodeProviderNotConfigured = 3011
 	CodeSettingsUnavailable   = 3012
+	CodeJobsUnavailable       = 3013
 )
 
 // Entries returns the registry entries. go-apperr has no resource-exhausted
@@ -73,6 +75,9 @@ func Entries() []apperr.Entry {
 		{Code: CodeSettingsUnavailable, Symbol: "AI_SETTINGS_UNAVAILABLE", Category: apperr.CategoryUnavailable,
 			Title: "settings", Cause: "the module's settings couldn't be read, so the call is refused rather than run with the module possibly off",
 			UserSafe: true, Message: "AI is unavailable right now. Try again in a moment."},
+		{Code: CodeJobsUnavailable, Symbol: "AI_JOBS_UNAVAILABLE", Category: apperr.CategoryUnavailable,
+			Title: "job", Cause: "the service has no Kubernetes API to create or read PolicyAIJob resources; the reason is in the start-up log",
+			UserSafe: true, Message: "AI jobs are unavailable right now."},
 	}
 }
 
@@ -114,6 +119,12 @@ func New(ctx context.Context, code int, kv ...string) error {
 // Invalid is AI_REQUEST_INVALID naming the field and why.
 func Invalid(ctx context.Context, field, reason string) error {
 	return New(ctx, CodeRequestInvalid, "field", field, "reason", reason)
+}
+
+// JobsUnavailable codes a job call made while the service has no
+// Kubernetes API; reason is why.
+func JobsUnavailable(reason error) error {
+	return apperr.Coded(CodeJobsUnavailable, fmt.Errorf("ai: no Kubernetes API for jobs: %w", reason))
 }
 
 // Doc is the Markdown body of docs/error-codes.md.
