@@ -158,11 +158,7 @@ func run(ctx context.Context, logger log.Logger) error {
 	summaries := store.NewSummaryStore(db)
 	qaCache := cache.New(rdb, db)
 
-	jobClient, err := kubeClient()
-	if err != nil {
-		return err
-	}
-	jobs := grpcsvc.NewJobAdapter(jobClient, cfg.JobNamespace)
+	jobs, jobsCheck := jobBackend(cfg.JobNamespace, logger)
 
 	pending := reeval.NewPendingSet(rdb, reeval.WindowFromEnv())
 	assist := generation.NewAssist(llmClient)
@@ -202,6 +198,7 @@ func run(ctx context.Context, logger log.Logger) error {
 		Valkey:     func(ctx context.Context) error { return rdb.Ping(ctx).Err() },
 		Embeddings: readiness.RecheckEvery(embeddingsCheck(embedder), embeddingsRecheck, time.Now),
 		Provider:   providerCheck(llmClient),
+		Jobs:       jobsCheck,
 	}
 	serveOpts := server.Options{}
 	if cfg.WorkloadAuth {
@@ -272,6 +269,28 @@ func requireVector(ctx context.Context, dsn string) error {
 	return nil
 }
 
+// jobService creates and reads PolicyAIJob resources.
+type jobService interface {
+	CreateJob(ctx context.Context, spec v1alpha1.PolicyAIJobSpec) (*v1alpha1.PolicyAIJob, error)
+	GetJob(ctx context.Context, jobID string) (*v1alpha1.PolicyAIJob, error)
+}
+
+// jobBackend returns the job client and its readiness check. Only the job
+// endpoints and the re-evaluation need the API server, so without one the
+// service still starts: the job calls are refused and readiness reports
+// kubernetes degraded with the reason.
+func jobBackend(namespace string, logger log.Logger) (jobService, func(context.Context) error) {
+	c, err := kubeClient()
+	if err != nil {
+		logger.Warn("no Kubernetes API: AI jobs and related-policy re-evaluation are off", log.F("error", err.Error()))
+		reason := fmt.Errorf("no Kubernetes API, AI jobs are off: %w", err)
+		return grpcsvc.NewUnavailableJobs(err), func(context.Context) error { return reason }
+	}
+	a := grpcsvc.NewJobAdapter(c, namespace)
+	logger.Info("AI jobs on", log.F("namespace", namespace))
+	return a, a.Ping
+}
+
 func kubeClient() (client.Client, error) {
 	scheme := runtime.NewScheme()
 	utilruntime.Must(v1alpha1.AddToScheme(scheme))
@@ -327,7 +346,7 @@ func consume(ctx context.Context, conn *rabbitmq.Conn, c *consumer.PublishEventC
 
 // reevalJobCreator starts one RELATED_REEVAL job when a quiet period ends;
 // the operator drains the whole pending set.
-type reevalJobCreator struct{ jobs *grpcsvc.JobAdapter }
+type reevalJobCreator struct{ jobs jobService }
 
 func (c reevalJobCreator) CreateReevalJob(ctx context.Context) error {
 	_, err := c.jobs.CreateJob(ctx, v1alpha1.PolicyAIJobSpec{Operation: v1alpha1.OperationRelatedReeval})

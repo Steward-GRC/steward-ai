@@ -8,8 +8,10 @@
 // is required too. The embeddings server and the generative provider are
 // optional: without them the AI calls fail with a coded error, but the
 // service keeps serving its settings and stored results, so it reports
-// degraded instead of draining. With authentication switched off
-// (WORKLOAD_AUTH=disabled) it reports degraded as well.
+// degraded instead of draining. The server's Kubernetes API, which only the
+// job endpoints use, is optional the same way; the operator's is required.
+// With authentication switched off (WORKLOAD_AUTH=disabled) it reports
+// degraded as well.
 package readiness
 
 import (
@@ -35,7 +37,8 @@ const (
 	JWKS = "jwks"
 	// WorkloadAuth is reported, degraded, only while authentication is off.
 	WorkloadAuth = "workloadauth"
-	// Kubernetes is the API server the operator reconciles through.
+	// Kubernetes is the API server: the operator reconciles through it, and
+	// the server creates and reads its jobs there.
 	Kubernetes = "kubernetes"
 )
 
@@ -67,6 +70,9 @@ type Deps struct {
 	// Kubernetes checks the API server; required when set, which only the
 	// operator does.
 	Kubernetes func(ctx context.Context) error
+	// Jobs checks the server's access to its PolicyAIJob resources. It is
+	// reported as kubernetes, but optional. Set Kubernetes or Jobs, not both.
+	Jobs func(ctx context.Context) error
 }
 
 var (
@@ -97,6 +103,9 @@ func New(d Deps, opts ...health.Option) (*health.Checker, error) {
 	}
 	if d.Kubernetes != nil {
 		deps = append(deps, health.Dependency{Name: Kubernetes, Required: true, Check: d.Kubernetes})
+	}
+	if d.Jobs != nil {
+		deps = append(deps, health.Dependency{Name: Kubernetes, Check: d.Jobs})
 	}
 	if d.WorkloadAuthDisabled {
 		deps = append(deps, health.Dependency{Name: WorkloadAuth, Check: func(context.Context) error { return errWorkloadAuthDisabled }})

@@ -19,3 +19,4 @@ the caller; every other code is sent as `Code N: Internal Error`.
 | 3010 | `AI_JOB_NOT_FOUND` | job | no job has this id, or it was submitted by someone else | yes |
 | 3011 | `AI_PROVIDER_NOT_CONFIGURED` | provider | no provider is chosen, or the chosen one needs a credential, endpoint or region that isn't set | yes |
 | 3012 | `AI_SETTINGS_UNAVAILABLE` | settings | the module's settings couldn't be read, so the call is refused rather than run with the module possibly off | yes |
+| 3013 | `AI_JOBS_UNAVAILABLE` | job | the service has no Kubernetes API to create or read PolicyAIJob resources; the reason is in the start-up log | yes |
