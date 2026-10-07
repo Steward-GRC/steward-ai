@@ -34,8 +34,8 @@ The images: `docker build --build-arg VERSION=<tag> --build-arg COMMIT=<sha> .`,
 - [Data and migrations](docs/data.md)
 - [Error codes](docs/error-codes.md)
 - [Runbook](docs/runbook.md)
-- [Contributing](https://github.com/Steward-GRC/.github/blob/main/CONTRIBUTING.md) and
-  [security](https://github.com/Steward-GRC/.github/blob/main/SECURITY.md)
+- [Contributing](https://github.com/Steward-GRC/.github/blob/main/.github/CONTRIBUTING.md) and
+  [security](https://github.com/Steward-GRC/.github/blob/main/.github/SECURITY.md)
 
 ## 🛠 Develop
 
