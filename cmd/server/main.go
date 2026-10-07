@@ -25,6 +25,7 @@ import (
 	"github.com/Bugs5382/go-rabbitmq"
 	rmqotel "github.com/Bugs5382/go-rabbitmq/otel"
 	redis "github.com/Bugs5382/go-redis"
+	"github.com/jackc/pgx/v5"
 	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -87,6 +88,9 @@ func run(ctx context.Context, logger log.Logger) error {
 		}
 	}()
 
+	if err := requireVector(ctx, cfg.MigrateDSN); err != nil {
+		return err
+	}
 	if err := pgotel.InstrumentMigrate(ctx, serviceName, func() error {
 		return postgres.Migrate(cfg.MigrateDSN, cfg.MigrationsDir)
 	}); err != nil {
@@ -251,6 +255,22 @@ func run(ctx context.Context, logger log.Logger) error {
 // policyRetiredRoutingKey is core's retire event for a policy. Its body names
 // only the policy, and the consumer drops every chunk of it.
 const policyRetiredRoutingKey = "policy.retired"
+
+// requireVector checks the extension on its own short connection, before
+// the migration can leave the schema dirty.
+func requireVector(ctx context.Context, dsn string) error {
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+	conn, err := pgx.Connect(ctx, dsn)
+	if err != nil {
+		return fmt.Errorf("postgres: %w", err)
+	}
+	defer func() { _ = conn.Close(context.Background()) }()
+	if err := store.RequireVector(ctx, conn); err != nil {
+		return fmt.Errorf("postgres: %w", err)
+	}
+	return nil
+}
 
 func kubeClient() (client.Client, error) {
 	scheme := runtime.NewScheme()

@@ -5,6 +5,12 @@ is one migration, [`migrations/0001_baseline.up.sql`](../migrations/0001_baselin
 at start-up with go-postgres. Until the first release it stays the only migration; installs of the
 original service come over through `steward-migrate`.
 
+The baseline runs `CREATE EXTENSION IF NOT EXISTS vector`, so the server must ship pgvector (for
+example the `pgvector/pgvector:pg16` image) and the migration role must be allowed to create it,
+or an administrator creates it in the database first. Before migrating, the server checks that the
+extension is installed or available; if it isn't, start-up stops with `the Postgres server has no
+vector extension (pgvector)` and nothing is migrated, so the schema is never left dirty.
+
 | Table | Holds |
 | --- | --- |
 | `ai_chunks` | One row per chunk of a published section: text, 384-wide embedding, and the category, sensitivity and title copied from core's publish event. |

@@ -7,7 +7,7 @@ fails the boot. [`.env.example`](../.env.example) has a local set.
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `DATABASE_DSN` | required | Postgres with pgvector. |
+| `DATABASE_DSN` | required | Postgres with pgvector; start-up stops before migrating when the server has no `vector` extension (see [data](data.md)). |
 | `RABBITMQ_URL` | required | RabbitMQ: core's publish events in, audit and job completion events out. |
 | `REDIS_ADDR` | required | Valkey: the answer cache, the daily counters, the re-evaluation queue and job results. |
 | `REDIS_PASSWORD` | empty | Valkey password. |
