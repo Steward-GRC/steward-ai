@@ -13,9 +13,9 @@ import (
 	"strconv"
 	"time"
 
+	workloadidentity "github.com/Bugs5382/go-workload-identity"
 	"github.com/Steward-GRC/steward-ai/internal/airules"
 	"github.com/Steward-GRC/steward-ai/internal/store"
-	"github.com/Steward-GRC/steward-ai/internal/workloadauth"
 )
 
 // The embeddings providers AI_EMBED_PROVIDER takes.
@@ -78,7 +78,7 @@ type Config struct {
 	BackfillCentroids bool
 	// WorkloadAuth is false only for WORKLOAD_AUTH=disabled, on local runs.
 	WorkloadAuth bool
-	Workload     workloadauth.Config
+	Workload     workloadidentity.Config
 }
 
 // Operator is the operator's settings.
@@ -209,7 +209,7 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 	c.MigrateDSN = r.str("MIGRATE_DSN", c.DatabaseDSN)
 	var err error
-	if c.Workload, c.WorkloadAuth, err = workloadauth.ServerConfigFromEnv(getenv); err != nil {
+	if c.Workload, c.WorkloadAuth, err = serverWorkloadConfig(getenv); err != nil {
 		r.errs = append(r.errs, err)
 	}
 	return c, errors.Join(r.errs...)

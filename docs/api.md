@@ -97,8 +97,8 @@ services' contracts:
   unmerged change.
 - core's lifecycle events, JSON as core documents them.
 
-`STEWARD_CORE_REF` pins steward-core's `internal/workloadauth`, which is copied here byte for byte;
-`scripts/workloadauth-check.sh` fails CI when the copy differs.
+Service-to-service authentication is the `github.com/Bugs5382/go-workload-identity` library; Steward's
+audience (`steward`) and service-account prefix (`steward-`) are set in `internal/config/workload.go`.
 
 ## Service-to-service authentication
 
