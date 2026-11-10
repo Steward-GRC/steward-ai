@@ -4,16 +4,16 @@
 package grpcsvc
 
 import (
+	workloadidentity "github.com/Bugs5382/go-workload-identity"
 	aiv1 "github.com/Steward-GRC/steward-ai/gen/go/steward/ai/v1"
-	"github.com/Steward-GRC/steward-ai/internal/workloadauth"
 )
 
 // gateway is the only caller: it authenticates the person and forwards them
 // as the actor.
-var gateway = map[string]workloadauth.Access{"gateway": workloadauth.OnBehalf}
+var gateway = map[string]workloadidentity.Access{"gateway": workloadidentity.OnBehalf}
 
 // CallerPolicy is the workload-auth allow-list for AiService.
-var CallerPolicy = workloadauth.Policy{
+var CallerPolicy = workloadidentity.Policy{
 	aiv1.AiService_SearchAndAnswer_FullMethodName:       gateway,
 	aiv1.AiService_AuthoringAssist_FullMethodName:       gateway,
 	aiv1.AiService_SubmitAIJob_FullMethodName:           gateway,

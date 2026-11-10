@@ -19,10 +19,10 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
+	workloadidentity "github.com/Bugs5382/go-workload-identity"
 	aiv1 "github.com/Steward-GRC/steward-ai/gen/go/steward/ai/v1"
 	"github.com/Steward-GRC/steward-ai/internal/fixture"
 	"github.com/Steward-GRC/steward-ai/internal/server"
-	"github.com/Steward-GRC/steward-ai/internal/workloadauth"
 )
 
 func TestCallerPolicy_gatewayOnBehalfOnEveryMethod(t *testing.T) {
@@ -32,19 +32,19 @@ func TestCallerPolicy_gatewayOnBehalfOnEveryMethod(t *testing.T) {
 		full := "/" + aiv1.AiService_ServiceDesc.ServiceName + "/" + m.MethodName
 		callers, ok := CallerPolicy[full]
 		require.True(t, ok, "%s is not in the policy", full)
-		require.Equal(t, map[string]workloadauth.Access{"gateway": workloadauth.OnBehalf}, callers, full)
+		require.Equal(t, map[string]workloadidentity.Access{"gateway": workloadidentity.OnBehalf}, callers, full)
 	}
 }
 
 // fakeVerifier accepts a token naming a service account; anything else is
 // rejected.
-type fakeVerifier map[string]workloadauth.Caller
+type fakeVerifier map[string]workloadidentity.Caller
 
-func (f fakeVerifier) Verify(token string) (workloadauth.Caller, error) {
+func (f fakeVerifier) Verify(token string) (workloadidentity.Caller, error) {
 	if c, ok := f[token]; ok {
 		return c, nil
 	}
-	return workloadauth.Caller{}, workloadauth.ErrRejected
+	return workloadidentity.Caller{}, workloadidentity.ErrRejected
 }
 
 func serveAI(t *testing.T) (aiv1.AiServiceClient, func()) {
