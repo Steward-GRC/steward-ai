@@ -11,6 +11,7 @@ require (
 	github.com/Bugs5382/go-postgres v1.2.2
 	github.com/Bugs5382/go-rabbitmq v1.3.0
 	github.com/Bugs5382/go-redis v1.2.0
+	github.com/Bugs5382/go-workload-identity v1.0.0
 	github.com/anthropics/anthropic-sdk-go v1.78.0
 	github.com/aws/aws-sdk-go-v2 v1.47.1
 	github.com/aws/aws-sdk-go-v2/config v1.33.6

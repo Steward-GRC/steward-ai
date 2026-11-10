@@ -32,6 +32,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	workloadidentity "github.com/Bugs5382/go-workload-identity"
 	"github.com/Steward-GRC/steward-ai/api/v1alpha1"
 	aiv1 "github.com/Steward-GRC/steward-ai/gen/go/steward/ai/v1"
 	"github.com/Steward-GRC/steward-ai/internal/aiconfig"
@@ -52,7 +53,6 @@ import (
 	"github.com/Steward-GRC/steward-ai/internal/retrieval"
 	"github.com/Steward-GRC/steward-ai/internal/server"
 	"github.com/Steward-GRC/steward-ai/internal/store"
-	"github.com/Steward-GRC/steward-ai/internal/workloadauth"
 )
 
 const serviceName = "ai"
@@ -202,16 +202,16 @@ func run(ctx context.Context, logger log.Logger) error {
 	}
 	serveOpts := server.Options{}
 	if cfg.WorkloadAuth {
-		verifier, err := workloadauth.NewVerifier(cfg.Workload, logger)
+		verifier, err := workloadidentity.NewVerifier(cfg.Workload, logger)
 		if err != nil {
-			return fmt.Errorf("workloadauth: %w", err)
+			return fmt.Errorf("workload auth: %w", err)
 		}
 		go verifier.Run(ctx)
 		serveOpts.Auth = &server.Auth{Verifier: verifier, Policy: grpcsvc.CallerPolicy,
-			Options: []workloadauth.Option{workloadauth.WithDenyHook(auditDenial(auditor, logger))}}
+			Options: []workloadidentity.Option{workloadidentity.WithDenyHook(auditDenial(auditor, logger))}}
 		deps.JWKS = readiness.RecheckEvery(verifier.Refresh, time.Minute, time.Now)
 	} else {
-		go workloadauth.WarnDisabled(ctx, logger, workloadauth.DisabledWarnInterval)
+		go workloadidentity.WarnDisabled(ctx, logger, workloadidentity.DisabledWarnInterval)
 		deps.WorkloadAuthDisabled = true
 	}
 	checker, err := readiness.New(deps, health.WithTTL(5*time.Second), health.WithTimeout(2*time.Second), health.WithLogger(logger))
@@ -373,8 +373,8 @@ func providerCheck(c *llm.Client) func(context.Context) error {
 
 // auditDenial audits every call workloadauth refuses: who called what and
 // why, never the request.
-func auditDenial(auditor *audit.Emitter, logger log.Logger) workloadauth.DenyHook {
-	return func(ctx context.Context, d workloadauth.Denial) {
+func auditDenial(auditor *audit.Emitter, logger log.Logger) workloadidentity.DenyHook {
+	return func(ctx context.Context, d workloadidentity.Denial) {
 		if err := auditor.Emit(ctx, audit.Event{
 			Tier:    audit.TierAudit,
 			Action:  "ai.call.refused",
