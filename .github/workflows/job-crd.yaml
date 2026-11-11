@@ -2,17 +2,24 @@ name: CRD
 # Regenerates the deepcopy code and the CRD manifest from the Go types and
 # fails if either differs from what's committed. Pull requests only, not
 # while the PR is a draft.
+# Limited CI mode (org variable CI_MODE=limited, issue #31): skipped on PRs, run nightly
+# and on release/** pushes. Delete the variable to revert.
 on:
   pull_request:
     branches:
       - main
     types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: ['release/**']
+  schedule:
+    - cron: '57 6 * * *'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
   crd:
     name: CRD drift
-    if: github.event.pull_request.draft == false
+    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && vars.CI_MODE != 'limited')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
