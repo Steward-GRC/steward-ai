@@ -41,6 +41,20 @@ database query, so nothing outside it reaches the model or the answer.
 | `SetOrgContext` | The organisation context put in front of every prompt; empty by default. |
 | `SetAIRetrievalConfig`, `SetUserAiQueryLimit` | The retrieval candidate count; one person's daily limit. |
 
+## Job results
+
+A succeeded job's `result_ref` is the Valkey key `ai:job-result:<job id>:<OP>`, so two jobs of
+one operation on one version keep separate results. The value is a JSON envelope:
+
+```json
+{"operation": "REWRITE", "owner_user_id": "<submitter>", "result": {}}
+```
+
+`owner_user_id` is the user `GetAIJob` answers. A reader that serves the content to a caller must
+compare it with the caller's user id and refuse on a mismatch. An envelope with no
+`owner_user_id` (written before the field existed, at most 24 hours of cache) is owned by no one
+and must be refused.
+
 While the module is off, `SearchAndAnswer`, `AuthoringAssist`, `SubmitAIJob` and `TestProvider`
 are refused with `AI_DISABLED`, and nothing calls a provider.
 

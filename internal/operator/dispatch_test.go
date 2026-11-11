@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"strings"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -460,20 +459,52 @@ func TestDispatch_relationshipLearnEngineErrorPropagates(t *testing.T) {
 }
 
 func TestResultKey_scheme(t *testing.T) {
-	// With policyId+versionId the key is version-keyed.
+	// The key is the job id and the operation, with or without a version.
 	withIDs := &v1alpha1.PolicyAIJob{Spec: v1alpha1.PolicyAIJobSpec{
 		Operation: v1alpha1.OperationRewrite, PolicyID: "pol-1", VersionID: "ver-2",
 	}}
-	if got := operator.ResultKey(withIDs); got != "ai:job-result:pol-1:ver-2:REWRITE" {
-		t.Fatalf("version-keyed scheme: got %q", got)
+	withIDs.Name = "aijob-abc"
+	if got := operator.ResultKey(withIDs); got != "ai:job-result:aijob-abc:REWRITE" {
+		t.Fatalf("versioned job key: got %q", got)
 	}
 
-	// Without ids (e.g. DRAFT ahead of policy creation) → CR-name fallback.
 	noIDs := &v1alpha1.PolicyAIJob{Spec: v1alpha1.PolicyAIJobSpec{Operation: v1alpha1.OperationDraft}}
 	noIDs.Name = "aijob-abc"
-	got := operator.ResultKey(noIDs)
-	if !strings.HasPrefix(got, "ai:job-result:aijob-abc:DRAFT") {
-		t.Fatalf("name-fallback scheme: got %q", got)
+	if got := operator.ResultKey(noIDs); got != "ai:job-result:aijob-abc:DRAFT" {
+		t.Fatalf("unversioned job key: got %q", got)
+	}
+}
+
+// TestResultKey_twoJobsOfOneOperationStaySeparate: two jobs of one operation
+// on one version must not overwrite each other's result.
+func TestResultKey_twoJobsOfOneOperationStaySeparate(t *testing.T) {
+	spec := v1alpha1.PolicyAIJobSpec{Operation: v1alpha1.OperationRewrite, PolicyID: "pol-1", VersionID: "ver-2"}
+	a := &v1alpha1.PolicyAIJob{Spec: spec}
+	a.Name = "aijob-a"
+	b := &v1alpha1.PolicyAIJob{Spec: spec}
+	b.Name = "aijob-b"
+	if operator.ResultKey(a) == operator.ResultKey(b) {
+		t.Fatalf("two jobs share the key %q", operator.ResultKey(a))
+	}
+}
+
+// TestResultEnvelope_OwnedBy: only the job's submitter owns the result; an
+// envelope with no owner (written before owners were recorded) is owned by no
+// one.
+func TestResultEnvelope_OwnedBy(t *testing.T) {
+	env := operator.ResultEnvelope{Operation: "REWRITE", OwnerUserID: "user-1"}
+	if !env.OwnedBy("user-1") {
+		t.Fatal("the owner must be accepted")
+	}
+	if env.OwnedBy("user-2") {
+		t.Fatal("another user must be refused")
+	}
+	if env.OwnedBy("") {
+		t.Fatal("an empty caller must be refused")
+	}
+	old := operator.ResultEnvelope{Operation: "REWRITE"}
+	if old.OwnedBy("user-1") || old.OwnedBy("") {
+		t.Fatal("an envelope with no owner must be refused for everyone")
 	}
 }
 

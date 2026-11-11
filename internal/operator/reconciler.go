@@ -154,10 +154,11 @@ func (r *PolicyAIJobReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	l.Debug("job dispatched", log.F("attempt", attempt), log.F("duration_ms", nowFunc().Sub(start).Milliseconds()))
 
 	resultKey := ResultKey(&job)
-	if err := r.Results.WriteResult(ctx, resultKey, ResultEnvelope{Operation: string(job.Spec.Operation), Result: result}, ResultTTL); err != nil {
+	if err := r.Results.WriteResult(ctx, resultKey, ResultEnvelope{Operation: string(job.Spec.Operation), OwnerUserID: job.Spec.ActorUserID, Result: result}, ResultTTL); err != nil {
 		l.Error(err, "job result not written to valkey", log.F("attempt", attempt))
 		return r.handleAttemptFailure(ctx, &job, err)
 	}
+	l.Debug("job result written to valkey", log.F("key", resultKey), log.F("owner_recorded", job.Spec.ActorUserID != ""), log.F("ttl", ResultTTL.String()))
 
 	if r.Durable != nil {
 		resultJSON, err := json.Marshal(result)
