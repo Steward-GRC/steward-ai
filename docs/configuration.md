@@ -13,7 +13,7 @@ fails the boot. [`.env.example`](../.env.example) has a local set.
 | `REDIS_PASSWORD` | empty | Valkey password. |
 | `AI_SETTINGS_KEY` | required | 32 bytes, base64. Seals the provider credential in `ai_config`. Losing it means setting the credential again. |
 | `PROBE_PORT` | `8080` | `/livez` and `/readyz`. |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | `localhost:4317` | OpenTelemetry collector (traces and metrics). |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | empty | OpenTelemetry collector (traces and metrics). Unset or empty turns tracing off. |
 | `AI_EMBED_PROVIDER` | `tei` | `tei` (the built-in server), `openai` (any OpenAI-compatible embeddings endpoint) or `stub` (local runs only). |
 | `EMBED_ENDPOINT` | `http://steward-ai-embeddings/embed` | The embeddings endpoint. |
 | `AI_EMBED_MODEL` | empty | The embeddings model; required for `openai`. It must return 384-wide vectors. |
