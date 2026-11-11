@@ -36,3 +36,47 @@ func TestGetAIJob_withoutTheKubernetesAPIIsJobsUnavailable(t *testing.T) {
 	_, err := withoutKubernetes().GetAIJob(erinCtx(), &aiv1.GetAIJobRequest{JobId: "aijob-abc123"})
 	requireCode(t, err, errcodes.CodeJobsUnavailable, codes.Unavailable)
 }
+
+func TestGetProviderStatus_withoutTheKubernetesAPIIsUnavailableWithAReason(t *testing.T) {
+	resp, err := withoutKubernetes().GetProviderStatus(erinCtx(), &aiv1.GetProviderStatusRequest{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp.GetAvailable() || resp.GetReason() != ReasonJobsUnavailable {
+		t.Fatalf("want unavailable with reason %q, got %+v", ReasonJobsUnavailable, resp)
+	}
+}
+
+func TestGetProviderStatus_jobsUnavailableWinsOverAHealthyProvider(t *testing.T) {
+	d := newFakes().deps()
+	d.Jobs = NewUnavailableJobs(errors.New("no kubernetes"))
+	resp, err := New(d, WithLogger(log.Nop())).GetProviderStatus(erinCtx(), &aiv1.GetProviderStatusRequest{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp.GetAvailable() {
+		t.Fatalf("provider status must not claim available while jobs cannot run: %+v", resp)
+	}
+}
+
+func TestGetProviderStatus_withJobsReflectsTheProvider(t *testing.T) {
+	resp, err := New(newFakes().deps(), WithLogger(log.Nop())).GetProviderStatus(erinCtx(), &aiv1.GetProviderStatusRequest{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !resp.GetAvailable() || resp.GetReason() != "" {
+		t.Fatalf("want available, got %+v", resp)
+	}
+}
+
+func TestGetProviderStatus_providerReasonKeptWhenJobsAreUp(t *testing.T) {
+	f := newFakes()
+	f.llm.available, f.llm.reason = false, "auth_failed"
+	resp, err := New(f.deps(), WithLogger(log.Nop())).GetProviderStatus(erinCtx(), &aiv1.GetProviderStatusRequest{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp.GetAvailable() || resp.GetReason() != "auth_failed" {
+		t.Fatalf("want auth_failed, got %+v", resp)
+	}
+}
