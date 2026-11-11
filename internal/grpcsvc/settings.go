@@ -20,6 +20,10 @@ import (
 	"github.com/Steward-GRC/steward-ai/internal/store"
 )
 
+// ReasonJobsUnavailable is the provider-status reason reported while the
+// service has no Kubernetes API, so no job can be created or read.
+const ReasonJobsUnavailable = "jobs_unavailable"
+
 // OrgContextMaxChars bounds the organisation context, which is sent with
 // every prompt.
 const OrgContextMaxChars = 4000
@@ -29,8 +33,19 @@ const OrgContextMaxChars = 4000
 
 // GetProviderStatus reports the cached provider status. It never calls the
 // provider.
-func (s *AiServiceServer) GetProviderStatus(_ context.Context, _ *aiv1.GetProviderStatusRequest) (*aiv1.GetProviderStatusResponse, error) {
+//
+// While the service has no Kubernetes API every job call is refused, so the
+// status is unavailable with ReasonJobsUnavailable whatever the provider's
+// own state: a caller that reads this to decide whether to offer AI must not
+// be told yes when every action would fail.
+func (s *AiServiceServer) GetProviderStatus(ctx context.Context, _ *aiv1.GetProviderStatusRequest) (*aiv1.GetProviderStatusResponse, error) {
+	l := s.log.Ctx(ctx)
+	if _, down := s.d.Jobs.(UnavailableJobs); down {
+		l.Debug("provider status: jobs unavailable, reporting unavailable", log.F("reason", ReasonJobsUnavailable))
+		return &aiv1.GetProviderStatusResponse{Available: false, Reason: ReasonJobsUnavailable}, nil
+	}
 	available, reason := s.d.LLM.ProviderStatus()
+	l.Debug("provider status read", log.F("available", available), log.F("reason", reason))
 	return &aiv1.GetProviderStatusResponse{Available: available, Reason: reason}, nil
 }
 
