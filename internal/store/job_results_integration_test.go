@@ -75,3 +75,41 @@ func TestJobResultStore_Save_upsertsOnRetry(t *testing.T) {
 		t.Fatal("expected the row to reflect the updated result, not the original")
 	}
 }
+
+func TestJobResultStore_Get_readsTheSavedRow(t *testing.T) {
+	pool := newTestDB(t)
+	repo := store.NewJobResultStore(pool)
+	ctx := context.Background()
+
+	want := store.JobResult{
+		JobID:       "aijob-get",
+		Operation:   "DRAFT",
+		PolicyID:    "pol-1",
+		VersionID:   "ver-1",
+		ActorUserID: "user-3",
+		ResultJSON:  `{"sections":[]}`,
+	}
+	if err := repo.Save(ctx, want); err != nil {
+		t.Fatalf("save: %v", err)
+	}
+	got, found, err := repo.Get(ctx, "aijob-get")
+	if err != nil || !found {
+		t.Fatalf("get: found=%v err=%v", found, err)
+	}
+	if got.JobID != want.JobID || got.Operation != want.Operation || got.ActorUserID != want.ActorUserID ||
+		got.PolicyID != want.PolicyID || got.VersionID != want.VersionID {
+		t.Fatalf("expected %+v, got %+v", want, got)
+	}
+	if got.ResultJSON == "" {
+		t.Fatal("expected the result JSON")
+	}
+}
+
+func TestJobResultStore_Get_missingIsNotFoundNotAnError(t *testing.T) {
+	pool := newTestDB(t)
+	repo := store.NewJobResultStore(pool)
+	_, found, err := repo.Get(context.Background(), "aijob-nope")
+	if err != nil || found {
+		t.Fatalf("expected found=false and no error, got found=%v err=%v", found, err)
+	}
+}

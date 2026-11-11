@@ -26,6 +26,7 @@ const (
 	AiService_AuthoringAssist_FullMethodName       = "/steward.ai.v1.AiService/AuthoringAssist"
 	AiService_SubmitAIJob_FullMethodName           = "/steward.ai.v1.AiService/SubmitAIJob"
 	AiService_GetAIJob_FullMethodName              = "/steward.ai.v1.AiService/GetAIJob"
+	AiService_GetAIJobResult_FullMethodName        = "/steward.ai.v1.AiService/GetAIJobResult"
 	AiService_GetProviderStatus_FullMethodName     = "/steward.ai.v1.AiService/GetProviderStatus"
 	AiService_GetAIEnabled_FullMethodName          = "/steward.ai.v1.AiService/GetAIEnabled"
 	AiService_SetAIEnabled_FullMethodName          = "/steward.ai.v1.AiService/SetAIEnabled"
@@ -74,6 +75,11 @@ type AiServiceClient interface {
 	// GetAIJob reports a job submitted by the same person. A job submitted by
 	// someone else reads as not found.
 	GetAIJob(ctx context.Context, in *GetAIJobRequest, opts ...grpc.CallOption) (*GetAIJobResponse, error)
+	// GetAIJobResult returns the stored result of a succeeded job after its
+	// cache entry has expired. Only the person who submitted the job may read
+	// it; for anyone else, and for an id with no stored result, the call fails
+	// with AI_JOB_NOT_FOUND.
+	GetAIJobResult(ctx context.Context, in *GetAIJobResultRequest, opts ...grpc.CallOption) (*GetAIJobResultResponse, error)
 	// GetProviderStatus reports the service's cached view of whether the
 	// generative provider is usable. It never calls the provider.
 	GetProviderStatus(ctx context.Context, in *GetProviderStatusRequest, opts ...grpc.CallOption) (*GetProviderStatusResponse, error)
@@ -163,6 +169,16 @@ func (c *aiServiceClient) GetAIJob(ctx context.Context, in *GetAIJobRequest, opt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAIJobResponse)
 	err := c.cc.Invoke(ctx, AiService_GetAIJob_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aiServiceClient) GetAIJobResult(ctx context.Context, in *GetAIJobResultRequest, opts ...grpc.CallOption) (*GetAIJobResultResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAIJobResultResponse)
+	err := c.cc.Invoke(ctx, AiService_GetAIJobResult_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -359,6 +375,11 @@ type AiServiceServer interface {
 	// GetAIJob reports a job submitted by the same person. A job submitted by
 	// someone else reads as not found.
 	GetAIJob(context.Context, *GetAIJobRequest) (*GetAIJobResponse, error)
+	// GetAIJobResult returns the stored result of a succeeded job after its
+	// cache entry has expired. Only the person who submitted the job may read
+	// it; for anyone else, and for an id with no stored result, the call fails
+	// with AI_JOB_NOT_FOUND.
+	GetAIJobResult(context.Context, *GetAIJobResultRequest) (*GetAIJobResultResponse, error)
 	// GetProviderStatus reports the service's cached view of whether the
 	// generative provider is usable. It never calls the provider.
 	GetProviderStatus(context.Context, *GetProviderStatusRequest) (*GetProviderStatusResponse, error)
@@ -425,6 +446,9 @@ func (UnimplementedAiServiceServer) SubmitAIJob(context.Context, *SubmitAIJobReq
 }
 func (UnimplementedAiServiceServer) GetAIJob(context.Context, *GetAIJobRequest) (*GetAIJobResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAIJob not implemented")
+}
+func (UnimplementedAiServiceServer) GetAIJobResult(context.Context, *GetAIJobResultRequest) (*GetAIJobResultResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAIJobResult not implemented")
 }
 func (UnimplementedAiServiceServer) GetProviderStatus(context.Context, *GetProviderStatusRequest) (*GetProviderStatusResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetProviderStatus not implemented")
@@ -563,6 +587,24 @@ func _AiService_GetAIJob_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AiServiceServer).GetAIJob(ctx, req.(*GetAIJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AiService_GetAIJobResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAIJobResultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AiServiceServer).GetAIJobResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AiService_GetAIJobResult_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AiServiceServer).GetAIJobResult(ctx, req.(*GetAIJobResultRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -877,6 +919,10 @@ var AiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAIJob",
 			Handler:    _AiService_GetAIJob_Handler,
+		},
+		{
+			MethodName: "GetAIJobResult",
+			Handler:    _AiService_GetAIJobResult_Handler,
 		},
 		{
 			MethodName: "GetProviderStatus",

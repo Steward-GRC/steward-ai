@@ -182,6 +182,7 @@ func run(ctx context.Context, logger log.Logger) error {
 		Assist:            assist,
 		Jobs:              jobs,
 		JobResults:        grpcsvc.NewRedisJobResultReader(rdb),
+		StoredResults:     store.NewJobResultStore(db),
 		Summaries:         summaries,
 		TopQuestions:      store.NewQAQuestionStore(db),
 		Related:           centroids,

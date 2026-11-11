@@ -120,6 +120,22 @@ func (s *stubJobResultReader) ReadResult(_ context.Context, key string) ([]byte,
 	return s.raw, s.found, s.err
 }
 
+// stubStoredResults is the durable tier: rows by job id.
+type stubStoredResults struct {
+	rows  map[string]store.JobResult
+	err   error
+	calls int
+}
+
+func (s *stubStoredResults) Get(_ context.Context, jobID string) (store.JobResult, bool, error) {
+	s.calls++
+	if s.err != nil {
+		return store.JobResult{}, false, s.err
+	}
+	r, ok := s.rows[jobID]
+	return r, ok, nil
+}
+
 // stubAudit records every audit record.
 type stubAudit struct{ recs []AuditRecord }
 
@@ -343,6 +359,7 @@ type fakes struct {
 	assist   *stubAssist
 	jobs     *stubJobs
 	results  *stubJobResultReader
+	stored   *stubStoredResults
 	sums     *stubSummaryReader
 	topQ     *stubTopQuestions
 	related  *stubRelated
@@ -369,6 +386,7 @@ func newFakes() *fakes {
 		assist:  &stubAssist{},
 		jobs:    &stubJobs{},
 		results: &stubJobResultReader{},
+		stored:  &stubStoredResults{},
 		sums:    &stubSummaryReader{},
 		topQ:    &stubTopQuestions{},
 		related: &stubRelated{},
@@ -381,7 +399,7 @@ func newFakes() *fakes {
 func (f *fakes) deps() Deps {
 	return Deps{
 		Settings: f.settings, LLM: f.llm, Usage: f.usage, Retrieval: f.retr, QA: f.qa, Assist: f.assist,
-		Jobs: f.jobs, JobResults: f.results, Summaries: f.sums, TopQuestions: f.topQ, Related: f.related,
+		Jobs: f.jobs, JobResults: f.results, StoredResults: f.stored, Summaries: f.sums, TopQuestions: f.topQ, Related: f.related,
 		Quota: f.quota, UserLimits: f.limits, Audit: f.audit,
 		DefaultQueryLimit: airules.QueryQuotaDefault,
 		Embeddings:        Embeddings{Provider: "tei", Model: "embed-small"},

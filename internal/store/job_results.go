@@ -5,9 +5,11 @@ package store
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	postgres "github.com/Bugs5382/go-postgres"
+	"github.com/jackc/pgx/v5"
 )
 
 // JobResult is a durable record of one completed async AI job's generated
@@ -75,4 +77,25 @@ func (s *JobResultStore) ResultExists(ctx context.Context, jobID string) (bool, 
 		return false, fmt.Errorf("store: check job result exists: %w", err)
 	}
 	return exists, nil
+}
+
+// Get returns the durable result row for jobID. found is false with a nil
+// error when no row exists, so a caller can tell an absent result from a
+// failed read. The result JSON is returned as text.
+func (s *JobResultStore) Get(ctx context.Context, jobID string) (JobResult, bool, error) {
+	if s.db == nil {
+		return JobResult{}, false, fmt.Errorf("store: job result store has no pool configured")
+	}
+	const q = `
+SELECT job_id, operation, policy_id, version_id, actor_user_id, result_json::text
+FROM ai_job_results WHERE job_id = $1`
+	var r JobResult
+	err := s.db.Pool().QueryRow(ctx, q, jobID).Scan(&r.JobID, &r.Operation, &r.PolicyID, &r.VersionID, &r.ActorUserID, &r.ResultJSON)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return JobResult{}, false, nil
+	}
+	if err != nil {
+		return JobResult{}, false, fmt.Errorf("store: get job result: %w", err)
+	}
+	return r, true, nil
 }

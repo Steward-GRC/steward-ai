@@ -58,6 +58,13 @@ type jobResultReader interface {
 	ReadResult(ctx context.Context, key string) (raw []byte, found bool, err error)
 }
 
+// storedResultReader reads the durable copy of a finished job's result from
+// Postgres; store.JobResultStore satisfies it.
+type storedResultReader interface {
+	// Get reports found=false when no row exists for jobID.
+	Get(ctx context.Context, jobID string) (store.JobResult, bool, error)
+}
+
 // settingsStore is the module's settings; aiconfig.Store satisfies it.
 type settingsStore interface {
 	Settings(ctx context.Context) (aiconfig.Settings, error)
@@ -124,20 +131,21 @@ type Embeddings struct {
 
 // Deps are the server's dependencies. Every interface field is required.
 type Deps struct {
-	Settings     settingsStore
-	LLM          llmClient
-	Usage        usageReader
-	Retrieval    retriever
-	QA           qaEngine
-	Assist       assistEngine
-	Jobs         jobClient
-	JobResults   jobResultReader
-	Summaries    summaryReader
-	TopQuestions topQuestionsSource
-	Related      relatedSource
-	Quota        quotaCounter
-	UserLimits   userLimitStore
-	Audit        auditEmitter
+	Settings      settingsStore
+	LLM           llmClient
+	Usage         usageReader
+	Retrieval     retriever
+	QA            qaEngine
+	Assist        assistEngine
+	Jobs          jobClient
+	JobResults    jobResultReader
+	StoredResults storedResultReader
+	Summaries     summaryReader
+	TopQuestions  topQuestionsSource
+	Related       relatedSource
+	Quota         quotaCounter
+	UserLimits    userLimitStore
+	Audit         auditEmitter
 
 	// DefaultQueryLimit is the daily limit for anyone without an override;
 	// airules.UnlimitedQueryQuota lifts it.

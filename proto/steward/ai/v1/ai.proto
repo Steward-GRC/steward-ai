@@ -33,6 +33,11 @@ service AiService {
   // GetAIJob reports a job submitted by the same person. A job submitted by
   // someone else reads as not found.
   rpc GetAIJob(GetAIJobRequest) returns (GetAIJobResponse);
+  // GetAIJobResult returns the stored result of a succeeded job after its
+  // cache entry has expired. Only the person who submitted the job may read
+  // it; for anyone else, and for an id with no stored result, the call fails
+  // with AI_JOB_NOT_FOUND.
+  rpc GetAIJobResult(GetAIJobResultRequest) returns (GetAIJobResultResponse);
   // GetProviderStatus reports the service's cached view of whether the
   // generative provider is usable. It never calls the provider.
   rpc GetProviderStatus(GetProviderStatusRequest) returns (GetProviderStatusResponse);
@@ -235,6 +240,18 @@ message GetAIJobResponse {
   string finished_at = 5;
   // qa_result is set for a succeeded QA job.
   QaJobResult qa_result = 6;
+}
+
+message GetAIJobResultRequest {
+  string job_id = 1;
+}
+
+message GetAIJobResultResponse {
+  // operation is the job's operation name, for example "DRAFT".
+  string operation = 1;
+  // result_json is the generation payload as JSON, the same shape as the
+  // "result" member of the cached envelope.
+  string result_json = 2;
 }
 
 message QaJobResult {
