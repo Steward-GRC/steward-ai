@@ -207,6 +207,9 @@ func TestReconcile_draftHappyPath(t *testing.T) {
 	if env.Operation != string(v1alpha1.OperationDraft) {
 		t.Fatalf("expected envelope operation %q, got %q", v1alpha1.OperationDraft, env.Operation)
 	}
+	if env.OwnerUserID != "user-1" {
+		t.Fatalf("expected envelope owner %q, got %q", "user-1", env.OwnerUserID)
+	}
 	resp, ok := env.Result.(generation.DraftResponse)
 	if !ok {
 		t.Fatalf("expected DraftResponse in envelope, got %T", env.Result)
@@ -330,8 +333,8 @@ func TestReconcile_qaHappyPath(t *testing.T) {
 	if got.Status.Phase != v1alpha1.PhaseSucceeded {
 		t.Fatalf("expected Succeeded, got %q (error=%q)", got.Status.Phase, got.Status.Error)
 	}
-	if want := "ai:job-result:pol-1:ver-1:QA"; got.Status.ResultRef != want {
-		t.Fatalf("expected version-keyed result ref %q, got %q", want, got.Status.ResultRef)
+	if want := "ai:job-result:" + job.Name + ":QA"; got.Status.ResultRef != want {
+		t.Fatalf("expected job-keyed result ref %q, got %q", want, got.Status.ResultRef)
 	}
 
 	// Retrieval got the job's read scope.
@@ -389,10 +392,10 @@ func TestReconcile_reviewHappyPath(t *testing.T) {
 	if got.Status.ResultRef == "" {
 		t.Fatal("expected ResultRef set on success")
 	}
-	// REVIEW acts on an existing policy version, so the result key must be
-	// version-keyed (policyId+versionId+operation), not the DRAFT CR-name fallback.
-	if want := "ai:job-result:pol-1:ver-1:REVIEW"; got.Status.ResultRef != want {
-		t.Fatalf("expected version-keyed result ref %q, got %q", want, got.Status.ResultRef)
+	// The key carries the job id even on an existing policy version, so two
+	// jobs of one operation never share a result.
+	if want := "ai:job-result:" + job.Name + ":REVIEW"; got.Status.ResultRef != want {
+		t.Fatalf("expected job-keyed result ref %q, got %q", want, got.Status.ResultRef)
 	}
 
 	writes, key, val := rw.snapshot()

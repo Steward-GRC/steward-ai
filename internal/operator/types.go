@@ -22,17 +22,11 @@ const resultKeyPrefix = "ai:job-result"
 // Postgres outlives it.
 const ResultTTL = 24 * time.Hour
 
-// ResultKey is the Valkey key a job's result is written under. A job on an
-// existing version is keyed by policy, version and operation, so the latest
-// result for that version and operation is found without the job name. A job
-// with no version yet (a new draft) falls back to the job's own name, so
-// concurrent drafts never share a key.
+// ResultKey is the Valkey key a job's result is written under:
+// ai:job-result:<job id>:<OP>. The job id is unique, so two jobs of one
+// operation on one version never overwrite each other's result.
 func ResultKey(job *v1alpha1.PolicyAIJob) string {
-	op := string(job.Spec.Operation)
-	if job.Spec.PolicyID != "" && job.Spec.VersionID != "" {
-		return fmt.Sprintf("%s:%s:%s:%s", resultKeyPrefix, job.Spec.PolicyID, job.Spec.VersionID, op)
-	}
-	return fmt.Sprintf("%s:%s:%s", resultKeyPrefix, job.Name, op)
+	return fmt.Sprintf("%s:%s:%s", resultKeyPrefix, job.Name, string(job.Spec.Operation))
 }
 
 // CompletionEvent is published once a job reaches Succeeded or Failed.
@@ -55,10 +49,21 @@ type ResultWriter interface {
 }
 
 // ResultEnvelope is what is written under ResultKey: the result tagged with
-// its operation, so a reader can decode it without looking up the job.
+// its operation, so a reader can decode it without looking up the job, and
+// with the user who submitted the job, so a reader can refuse anyone else.
 type ResultEnvelope struct {
 	Operation string `json:"operation"`
-	Result    any    `json:"result"`
+	// OwnerUserID is the job's spec.actorUserId, the same user GetAIJob
+	// answers. Envelopes written before the field existed decode it as empty.
+	OwnerUserID string `json:"owner_user_id"`
+	Result      any    `json:"result"`
+}
+
+// OwnedBy reports whether userID submitted the job. It fails closed: an
+// envelope with no owner is owned by no one, and an empty userID never
+// matches.
+func (e ResultEnvelope) OwnedBy(userID string) bool {
+	return e.OwnerUserID != "" && userID != "" && e.OwnerUserID == userID
 }
 
 // EventPublisher publishes a completion event.
