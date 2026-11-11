@@ -136,6 +136,11 @@ type ReviseRequest struct {
 	Enrichments EnrichmentContext
 	// ModelID is the job's snapshotted model; empty uses the configured one.
 	ModelID string
+	// Framing is how new and changed text should read; empty keeps the
+	// default. CustomFraming is the author's wording, used only with
+	// FramingCustom.
+	Framing       Framing
+	CustomFraming string
 }
 
 // RevisedSection is one existing section's outcome: changed with its new
@@ -231,8 +236,13 @@ func (r *Revise) Generate(ctx context.Context, req ReviseRequest) (ReviseRespons
 		return ReviseResponse{}, fmt.Errorf("revise: instruction is required")
 	}
 
+	framing, err := validateFraming(req.Framing, req.CustomFraming)
+	if err != nil {
+		return ReviseResponse{}, fmt.Errorf("revise: %w", err)
+	}
+
 	resp, err := r.gen.Complete(ctx, provider.Request{
-		System:    reviseSystemPrompt,
+		System:    reviseSystemPromptFor(framing),
 		Messages:  []provider.Message{{Role: provider.RoleUser, Content: buildReviseUserPrompt(req)}},
 		MaxTokens: r.maxTokens,
 		Model:     req.ModelID,
@@ -263,6 +273,7 @@ func buildReviseUserPrompt(req ReviseRequest) string {
 	sb.WriteString("</policy_sections>\n")
 
 	sb.WriteString(req.Enrichments.render())
+	sb.WriteString(customFramingBlock(req.Framing, req.CustomFraming))
 	sb.WriteString("\n")
 
 	sb.WriteString("Revise the policy now per the instruction above. Report your changes as " +

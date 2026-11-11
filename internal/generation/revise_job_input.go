@@ -25,6 +25,9 @@ type ReviseJobInput struct {
 	Enrichments       *EnrichmentContext `json:"enrichments,omitempty"`
 	EnrichmentOptOut  EnrichmentOptOut   `json:"enrichmentOptOut"`
 	EnrichmentLibrary EnrichmentLibrary  `json:"enrichmentLibrary"`
+	// Framing and CustomFraming are as on DraftJobInput.
+	Framing       Framing `json:"framing,omitempty"`
+	CustomFraming string  `json:"customFraming,omitempty"`
 }
 
 // MarshalReviseJobInput encodes a ReviseJobInput for a job's input.
@@ -53,13 +56,15 @@ func (in ReviseJobInput) ToReviseRequest(actorUserID, categoryID, modelID string
 		sections = append(sections, ReviseSection(s))
 	}
 	req := ReviseRequest{
-		ActorUserID: actorUserID,
-		CategoryID:  categoryID,
-		PolicyID:    in.PolicyID,
-		VersionID:   in.VersionID,
-		Instruction: in.Instruction,
-		Sections:    sections,
-		ModelID:     modelID,
+		ActorUserID:   actorUserID,
+		CategoryID:    categoryID,
+		PolicyID:      in.PolicyID,
+		VersionID:     in.VersionID,
+		Instruction:   in.Instruction,
+		Sections:      sections,
+		ModelID:       modelID,
+		Framing:       in.Framing,
+		CustomFraming: in.CustomFraming,
 	}
 	if in.Enrichments != nil {
 		req.Enrichments = *in.Enrichments
