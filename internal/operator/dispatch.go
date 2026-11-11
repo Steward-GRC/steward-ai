@@ -8,6 +8,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
+
+	"github.com/jackc/pgx/v5"
 
 	log "github.com/Bugs5382/go-log"
 
@@ -20,7 +23,7 @@ import (
 )
 
 // ErrOperationNotImplemented is returned for an operation with nothing wired
-// to run it: REWRITE, CLARIFY and SUMMARIZE have no job engine, and the
+// to run it: REWRITE, CLARIFY and a SUMMARIZE with no scope have no job engine, and the
 // others report it when their engine was not attached.
 var ErrOperationNotImplemented = errors.New("operator: operation not implemented")
 
@@ -56,6 +59,26 @@ type relationshipLearnEngine interface {
 	Learn(ctx context.Context) (relationship.Result, error)
 }
 
+type changeSummaryEngine interface {
+	Summarize(ctx context.Context, req generation.ChangeSummaryRequest) ([]string, error)
+}
+
+// summaryCache holds the stored summary of a version pair. A lost entry only
+// means the next request writes a new summary.
+type summaryCache interface {
+	Get(ctx context.Context, key string) (generation.SummaryJobResult, bool, error)
+	Put(ctx context.Context, key string, v generation.SummaryJobResult) error
+}
+
+type versionSummaryWriter interface {
+	Generate(ctx context.Context, req generation.AssistRequest) (generation.AssistResponse, error)
+}
+
+type versionSummaryStore interface {
+	GetSummary(ctx context.Context, versionID string) (store.Summary, error)
+	UpsertSummary(ctx context.Context, s store.Summary) error
+}
+
 // Dispatcher runs the engine for a job's operation. A new operation is one
 // more case here plus its engine and input type; the reconciler and the
 // resource don't change.
@@ -68,6 +91,10 @@ type Dispatcher struct {
 	reeval    relatedReevalEngine
 	suggest   suggestEngine
 	relearn   relationshipLearnEngine
+	changes   changeSummaryEngine
+	changeKV  summaryCache
+	versionAI versionSummaryWriter
+	versions  versionSummaryStore
 	log       log.Logger
 }
 
@@ -94,6 +121,15 @@ func (d *Dispatcher) WithSuggest(e suggestEngine) *Dispatcher {
 // WithRelationshipLearn attaches the RELATIONSHIP_LEARN engine.
 func (d *Dispatcher) WithRelationshipLearn(e relationshipLearnEngine) *Dispatcher {
 	d.relearn = e
+	return d
+}
+
+// WithSummaries attaches the SUMMARIZE engines: changes and cache for the
+// summary of a version diff, writer and versions for one version's stored
+// summary. Either pair may be nil; its scope then reports
+// ErrOperationNotImplemented.
+func (d *Dispatcher) WithSummaries(changes changeSummaryEngine, cache summaryCache, writer versionSummaryWriter, versions versionSummaryStore) *Dispatcher {
+	d.changes, d.changeKV, d.versionAI, d.versions = changes, cache, writer, versions
 	return d
 }
 
@@ -140,7 +176,9 @@ func (d *Dispatcher) Dispatch(ctx context.Context, job *v1alpha1.PolicyAIJob) (a
 		return d.dispatchSuggestEnrichments(ctx, job)
 	case v1alpha1.OperationRelationshipLearn:
 		return d.dispatchRelationshipLearn(ctx, job)
-	case v1alpha1.OperationRewrite, v1alpha1.OperationClarify, v1alpha1.OperationSummarize:
+	case v1alpha1.OperationSummarize:
+		return d.dispatchSummarize(ctx, job)
+	case v1alpha1.OperationRewrite, v1alpha1.OperationClarify:
 		return nil, fmt.Errorf("%w: %s", ErrOperationNotImplemented, job.Spec.Operation)
 	default:
 		return nil, fmt.Errorf("operator: unknown operation %q", job.Spec.Operation)
@@ -319,4 +357,98 @@ func (d *Dispatcher) dispatchRelationshipLearn(ctx context.Context, job *v1alpha
 		return nil, fmt.Errorf("operator: relationship learn: %w", err)
 	}
 	return res, nil
+}
+
+// dispatchSummarize serves the two SUMMARIZE scopes. A job with no scope is
+// the whole-policy summary, which has no job engine.
+func (d *Dispatcher) dispatchSummarize(ctx context.Context, job *v1alpha1.PolicyAIJob) (any, error) {
+	in, err := decodeInput[generation.SummaryJobInput](job)
+	if err != nil {
+		return nil, err
+	}
+	switch in.Scope {
+	case generation.SummaryScopeChanges:
+		return d.summarizeChanges(ctx, job, in)
+	case generation.SummaryScopeVersion:
+		return d.summarizeVersion(ctx, job, in)
+	default:
+		return nil, fmt.Errorf("%w: %s", ErrOperationNotImplemented, job.Spec.Operation)
+	}
+}
+
+func (d *Dispatcher) summarizeChanges(ctx context.Context, job *v1alpha1.PolicyAIJob, in generation.SummaryJobInput) (any, error) {
+	if d.changes == nil || d.changeKV == nil {
+		return nil, fmt.Errorf("%w: %s changes (engine not wired)", ErrOperationNotImplemented, job.Spec.Operation)
+	}
+	if in.FromVersionID == "" || in.ToVersionID == "" {
+		return nil, errors.New("operator: change summary needs fromVersionId and toVersionId")
+	}
+	l := d.log.Ctx(ctx).With(log.F("job", job.Name), log.F("from_version", in.FromVersionID), log.F("to_version", in.ToVersionID))
+	key := generation.ChangeSummaryKey(in.FromVersionID, in.ToVersionID, in.Diff)
+	if !in.Regenerate {
+		hit, found, err := d.changeKV.Get(ctx, key)
+		switch {
+		case err != nil:
+			l.Warn("stored change summary unreadable; generating a new one", log.F("error", err.Error()))
+		case found:
+			l.Debug("change summary served from the store")
+			hit.Cached = true
+			return hit, nil
+		}
+	}
+	bullets, err := d.changes.Summarize(ctx, generation.ChangeSummaryRequest{FromVersionID: in.FromVersionID, ToVersionID: in.ToVersionID, Diff: in.Diff})
+	if err != nil {
+		return nil, fmt.Errorf("operator: change summary: %w", err)
+	}
+	res := generation.SummaryJobResult{
+		Scope: generation.SummaryScopeChanges, Bullets: bullets,
+		GeneratedAt: nowFunc().UTC().Format(time.RFC3339),
+	}
+	if err := d.changeKV.Put(ctx, key, res); err != nil {
+		// The summary is still good; only the next request's cache hit is lost.
+		l.Warn("change summary not stored", log.F("error", err.Error()))
+	}
+	l.Info("change summary generated", log.F("regenerate", in.Regenerate), log.F("bullets", len(bullets)))
+	return res, nil
+}
+
+func (d *Dispatcher) summarizeVersion(ctx context.Context, job *v1alpha1.PolicyAIJob, in generation.SummaryJobInput) (any, error) {
+	if d.versionAI == nil || d.versions == nil {
+		return nil, fmt.Errorf("%w: %s version (engine not wired)", ErrOperationNotImplemented, job.Spec.Operation)
+	}
+	if in.VersionID == "" {
+		return nil, errors.New("operator: version summary needs versionId")
+	}
+	l := d.log.Ctx(ctx).With(log.F("job", job.Name), log.F("version", in.VersionID))
+	if !in.Regenerate {
+		row, err := d.versions.GetSummary(ctx, in.VersionID)
+		switch {
+		case err == nil:
+			l.Debug("version summary served from the store")
+			return generation.SummaryJobResult{
+				Scope: generation.SummaryScopeVersion, SummaryText: row.SummaryText,
+				GeneratedAt: row.GeneratedAt.UTC().Format(time.RFC3339), Cached: true,
+			}, nil
+		case !errors.Is(err, pgx.ErrNoRows):
+			return nil, fmt.Errorf("operator: read version summary: %w", err)
+		}
+		l.Debug("no stored version summary; generating")
+	}
+	resp, err := d.versionAI.Generate(ctx, generation.AssistRequest{
+		ActorUserID: job.Spec.ActorUserID, PolicyID: in.PolicyID, VersionID: in.VersionID,
+		EditableContent: in.Text, Operation: generation.AssistOperationSummarize,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("operator: version summary: %w", err)
+	}
+	if err := d.versions.UpsertSummary(ctx, store.Summary{
+		VersionID: in.VersionID, PolicyID: in.PolicyID, PolicyTitle: in.PolicyTitle, SummaryText: resp.Suggestion,
+	}); err != nil {
+		return nil, fmt.Errorf("operator: store version summary: %w", err)
+	}
+	l.Info("version summary generated", log.F("regenerate", in.Regenerate))
+	return generation.SummaryJobResult{
+		Scope: generation.SummaryScopeVersion, SummaryText: resp.Suggestion,
+		GeneratedAt: nowFunc().UTC().Format(time.RFC3339),
+	}, nil
 }
