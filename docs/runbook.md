@@ -76,6 +76,8 @@ provider was in use, since nothing was indexed while it was off.
 intake is refused with `AI_MONTHLY_LIMIT_REACHED` until the first day of next month (UTC), or until
 the limit is raised. Each person's daily limit (`AI_QUERY_QUOTA_DEFAULT`, overridden per person) is
 counted in Valkey and resets at 00:00 UTC; a Valkey error lets the call through.
+`GetMyUsageLimit` tells the caller whether either limit is reached (`limit_reached`) without
+counting a query; it reads only the caller's own count.
 
 ## Rotating the credential or the settings key
 

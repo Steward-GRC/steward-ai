@@ -2507,6 +2507,144 @@ func (x *GetUsageResponse) GetResetsAt() string {
 	return ""
 }
 
+type GetMyUsageLimitRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMyUsageLimitRequest) Reset() {
+	*x = GetMyUsageLimitRequest{}
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMyUsageLimitRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUsageLimitRequest) ProtoMessage() {}
+
+func (x *GetMyUsageLimitRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUsageLimitRequest.ProtoReflect.Descriptor instead.
+func (*GetMyUsageLimitRequest) Descriptor() ([]byte, []int) {
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{37}
+}
+
+type GetMyUsageLimitResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// daily_limit is the actor's effective queries per UTC day: their override
+	// when they have one, else the default. Zero means unlimited.
+	DailyLimit int64 `protobuf:"varint,1,opt,name=daily_limit,json=dailyLimit,proto3" json:"daily_limit,omitempty"`
+	// daily_used is the queries counted for the actor today.
+	DailyUsed int64 `protobuf:"varint,2,opt,name=daily_used,json=dailyUsed,proto3" json:"daily_used,omitempty"`
+	// daily_resets_at is the next UTC midnight, RFC 3339.
+	DailyResetsAt string `protobuf:"bytes,3,opt,name=daily_resets_at,json=dailyResetsAt,proto3" json:"daily_resets_at,omitempty"`
+	// daily_limit_reached is true when the actor's next query would be
+	// refused for the daily limit.
+	DailyLimitReached bool `protobuf:"varint,4,opt,name=daily_limit_reached,json=dailyLimitReached,proto3" json:"daily_limit_reached,omitempty"`
+	// monthly_limit_reached is true when the organisation's monthly limit on
+	// provider requests is reached. False when no monthly limit is set.
+	MonthlyLimitReached bool `protobuf:"varint,5,opt,name=monthly_limit_reached,json=monthlyLimitReached,proto3" json:"monthly_limit_reached,omitempty"`
+	// monthly_resets_at is the start of next month, RFC 3339.
+	MonthlyResetsAt string `protobuf:"bytes,6,opt,name=monthly_resets_at,json=monthlyResetsAt,proto3" json:"monthly_resets_at,omitempty"`
+	// limit_reached is daily_limit_reached or monthly_limit_reached.
+	LimitReached  bool `protobuf:"varint,7,opt,name=limit_reached,json=limitReached,proto3" json:"limit_reached,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMyUsageLimitResponse) Reset() {
+	*x = GetMyUsageLimitResponse{}
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMyUsageLimitResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUsageLimitResponse) ProtoMessage() {}
+
+func (x *GetMyUsageLimitResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUsageLimitResponse.ProtoReflect.Descriptor instead.
+func (*GetMyUsageLimitResponse) Descriptor() ([]byte, []int) {
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *GetMyUsageLimitResponse) GetDailyLimit() int64 {
+	if x != nil {
+		return x.DailyLimit
+	}
+	return 0
+}
+
+func (x *GetMyUsageLimitResponse) GetDailyUsed() int64 {
+	if x != nil {
+		return x.DailyUsed
+	}
+	return 0
+}
+
+func (x *GetMyUsageLimitResponse) GetDailyResetsAt() string {
+	if x != nil {
+		return x.DailyResetsAt
+	}
+	return ""
+}
+
+func (x *GetMyUsageLimitResponse) GetDailyLimitReached() bool {
+	if x != nil {
+		return x.DailyLimitReached
+	}
+	return false
+}
+
+func (x *GetMyUsageLimitResponse) GetMonthlyLimitReached() bool {
+	if x != nil {
+		return x.MonthlyLimitReached
+	}
+	return false
+}
+
+func (x *GetMyUsageLimitResponse) GetMonthlyResetsAt() string {
+	if x != nil {
+		return x.MonthlyResetsAt
+	}
+	return ""
+}
+
+func (x *GetMyUsageLimitResponse) GetLimitReached() bool {
+	if x != nil {
+		return x.LimitReached
+	}
+	return false
+}
+
 type SetOrgContextRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrgContext    string                 `protobuf:"bytes,1,opt,name=org_context,json=orgContext,proto3" json:"org_context,omitempty"`
@@ -2516,7 +2654,7 @@ type SetOrgContextRequest struct {
 
 func (x *SetOrgContextRequest) Reset() {
 	*x = SetOrgContextRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2528,7 +2666,7 @@ func (x *SetOrgContextRequest) String() string {
 func (*SetOrgContextRequest) ProtoMessage() {}
 
 func (x *SetOrgContextRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2541,7 +2679,7 @@ func (x *SetOrgContextRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetOrgContextRequest.ProtoReflect.Descriptor instead.
 func (*SetOrgContextRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{37}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *SetOrgContextRequest) GetOrgContext() string {
@@ -2560,7 +2698,7 @@ type SetOrgContextResponse struct {
 
 func (x *SetOrgContextResponse) Reset() {
 	*x = SetOrgContextResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2572,7 +2710,7 @@ func (x *SetOrgContextResponse) String() string {
 func (*SetOrgContextResponse) ProtoMessage() {}
 
 func (x *SetOrgContextResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2585,7 +2723,7 @@ func (x *SetOrgContextResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetOrgContextResponse.ProtoReflect.Descriptor instead.
 func (*SetOrgContextResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{38}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *SetOrgContextResponse) GetOrgContext() string {
@@ -2606,7 +2744,7 @@ type GetTopQuestionsRequest struct {
 
 func (x *GetTopQuestionsRequest) Reset() {
 	*x = GetTopQuestionsRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2618,7 +2756,7 @@ func (x *GetTopQuestionsRequest) String() string {
 func (*GetTopQuestionsRequest) ProtoMessage() {}
 
 func (x *GetTopQuestionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2631,7 +2769,7 @@ func (x *GetTopQuestionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTopQuestionsRequest.ProtoReflect.Descriptor instead.
 func (*GetTopQuestionsRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{39}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetTopQuestionsRequest) GetLimit() int32 {
@@ -2657,7 +2795,7 @@ type GetTopQuestionsResponse struct {
 
 func (x *GetTopQuestionsResponse) Reset() {
 	*x = GetTopQuestionsResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2669,7 +2807,7 @@ func (x *GetTopQuestionsResponse) String() string {
 func (*GetTopQuestionsResponse) ProtoMessage() {}
 
 func (x *GetTopQuestionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2682,7 +2820,7 @@ func (x *GetTopQuestionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTopQuestionsResponse.ProtoReflect.Descriptor instead.
 func (*GetTopQuestionsResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{40}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GetTopQuestionsResponse) GetQuestions() []string {
@@ -2701,7 +2839,7 @@ type GetPolicySummaryRequest struct {
 
 func (x *GetPolicySummaryRequest) Reset() {
 	*x = GetPolicySummaryRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2713,7 +2851,7 @@ func (x *GetPolicySummaryRequest) String() string {
 func (*GetPolicySummaryRequest) ProtoMessage() {}
 
 func (x *GetPolicySummaryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2726,7 +2864,7 @@ func (x *GetPolicySummaryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPolicySummaryRequest.ProtoReflect.Descriptor instead.
 func (*GetPolicySummaryRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{41}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *GetPolicySummaryRequest) GetVersionId() string {
@@ -2748,7 +2886,7 @@ type GetPolicySummaryResponse struct {
 
 func (x *GetPolicySummaryResponse) Reset() {
 	*x = GetPolicySummaryResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2760,7 +2898,7 @@ func (x *GetPolicySummaryResponse) String() string {
 func (*GetPolicySummaryResponse) ProtoMessage() {}
 
 func (x *GetPolicySummaryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2773,7 +2911,7 @@ func (x *GetPolicySummaryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPolicySummaryResponse.ProtoReflect.Descriptor instead.
 func (*GetPolicySummaryResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{42}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *GetPolicySummaryResponse) GetFound() bool {
@@ -2807,7 +2945,7 @@ type SetAIRetrievalConfigRequest struct {
 
 func (x *SetAIRetrievalConfigRequest) Reset() {
 	*x = SetAIRetrievalConfigRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2819,7 +2957,7 @@ func (x *SetAIRetrievalConfigRequest) String() string {
 func (*SetAIRetrievalConfigRequest) ProtoMessage() {}
 
 func (x *SetAIRetrievalConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2832,7 +2970,7 @@ func (x *SetAIRetrievalConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAIRetrievalConfigRequest.ProtoReflect.Descriptor instead.
 func (*SetAIRetrievalConfigRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{43}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *SetAIRetrievalConfigRequest) GetTopK() int32 {
@@ -2851,7 +2989,7 @@ type SetAIRetrievalConfigResponse struct {
 
 func (x *SetAIRetrievalConfigResponse) Reset() {
 	*x = SetAIRetrievalConfigResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2863,7 +3001,7 @@ func (x *SetAIRetrievalConfigResponse) String() string {
 func (*SetAIRetrievalConfigResponse) ProtoMessage() {}
 
 func (x *SetAIRetrievalConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2876,7 +3014,7 @@ func (x *SetAIRetrievalConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAIRetrievalConfigResponse.ProtoReflect.Descriptor instead.
 func (*SetAIRetrievalConfigResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{44}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SetAIRetrievalConfigResponse) GetTopK() int32 {
@@ -2898,7 +3036,7 @@ type SetUserAiQueryLimitRequest struct {
 
 func (x *SetUserAiQueryLimitRequest) Reset() {
 	*x = SetUserAiQueryLimitRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2910,7 +3048,7 @@ func (x *SetUserAiQueryLimitRequest) String() string {
 func (*SetUserAiQueryLimitRequest) ProtoMessage() {}
 
 func (x *SetUserAiQueryLimitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2923,7 +3061,7 @@ func (x *SetUserAiQueryLimitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserAiQueryLimitRequest.ProtoReflect.Descriptor instead.
 func (*SetUserAiQueryLimitRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{45}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *SetUserAiQueryLimitRequest) GetTargetUserId() string {
@@ -2953,7 +3091,7 @@ type SetUserAiQueryLimitResponse struct {
 
 func (x *SetUserAiQueryLimitResponse) Reset() {
 	*x = SetUserAiQueryLimitResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2965,7 +3103,7 @@ func (x *SetUserAiQueryLimitResponse) String() string {
 func (*SetUserAiQueryLimitResponse) ProtoMessage() {}
 
 func (x *SetUserAiQueryLimitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2978,7 +3116,7 @@ func (x *SetUserAiQueryLimitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserAiQueryLimitResponse.ProtoReflect.Descriptor instead.
 func (*SetUserAiQueryLimitResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{46}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *SetUserAiQueryLimitResponse) GetEffectiveLimit() int32 {
@@ -3014,7 +3152,7 @@ type GetRelatedPoliciesRequest struct {
 
 func (x *GetRelatedPoliciesRequest) Reset() {
 	*x = GetRelatedPoliciesRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3026,7 +3164,7 @@ func (x *GetRelatedPoliciesRequest) String() string {
 func (*GetRelatedPoliciesRequest) ProtoMessage() {}
 
 func (x *GetRelatedPoliciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3039,7 +3177,7 @@ func (x *GetRelatedPoliciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRelatedPoliciesRequest.ProtoReflect.Descriptor instead.
 func (*GetRelatedPoliciesRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{47}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *GetRelatedPoliciesRequest) GetPolicyId() string {
@@ -3072,7 +3210,7 @@ type GetRelatedPoliciesResponse struct {
 
 func (x *GetRelatedPoliciesResponse) Reset() {
 	*x = GetRelatedPoliciesResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[48]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3084,7 +3222,7 @@ func (x *GetRelatedPoliciesResponse) String() string {
 func (*GetRelatedPoliciesResponse) ProtoMessage() {}
 
 func (x *GetRelatedPoliciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[48]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3097,7 +3235,7 @@ func (x *GetRelatedPoliciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRelatedPoliciesResponse.ProtoReflect.Descriptor instead.
 func (*GetRelatedPoliciesResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{48}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *GetRelatedPoliciesResponse) GetRelated() []*RelatedPolicy {
@@ -3122,7 +3260,7 @@ type RelatedPolicy struct {
 
 func (x *RelatedPolicy) Reset() {
 	*x = RelatedPolicy{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[49]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3134,7 +3272,7 @@ func (x *RelatedPolicy) String() string {
 func (*RelatedPolicy) ProtoMessage() {}
 
 func (x *RelatedPolicy) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[49]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3147,7 +3285,7 @@ func (x *RelatedPolicy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RelatedPolicy.ProtoReflect.Descriptor instead.
 func (*RelatedPolicy) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{49}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *RelatedPolicy) GetPolicyId() string {
@@ -3363,7 +3501,18 @@ const file_steward_ai_v1_ai_proto_rawDesc = "" +
 	"\finput_tokens\x18\x03 \x01(\x03R\vinputTokens\x12#\n" +
 	"\routput_tokens\x18\x04 \x01(\x03R\foutputTokens\x12#\n" +
 	"\rmonthly_limit\x18\x05 \x01(\x03R\fmonthlyLimit\x12\x1b\n" +
-	"\tresets_at\x18\x06 \x01(\tR\bresetsAt\"7\n" +
+	"\tresets_at\x18\x06 \x01(\tR\bresetsAt\"\x18\n" +
+	"\x16GetMyUsageLimitRequest\"\xb6\x02\n" +
+	"\x17GetMyUsageLimitResponse\x12\x1f\n" +
+	"\vdaily_limit\x18\x01 \x01(\x03R\n" +
+	"dailyLimit\x12\x1d\n" +
+	"\n" +
+	"daily_used\x18\x02 \x01(\x03R\tdailyUsed\x12&\n" +
+	"\x0fdaily_resets_at\x18\x03 \x01(\tR\rdailyResetsAt\x12.\n" +
+	"\x13daily_limit_reached\x18\x04 \x01(\bR\x11dailyLimitReached\x122\n" +
+	"\x15monthly_limit_reached\x18\x05 \x01(\bR\x13monthlyLimitReached\x12*\n" +
+	"\x11monthly_resets_at\x18\x06 \x01(\tR\x0fmonthlyResetsAt\x12#\n" +
+	"\rlimit_reached\x18\a \x01(\bR\flimitReached\"7\n" +
 	"\x14SetOrgContextRequest\x12\x1f\n" +
 	"\vorg_context\x18\x01 \x01(\tR\n" +
 	"orgContext\"8\n" +
@@ -3441,7 +3590,7 @@ const file_steward_ai_v1_ai_proto_rawDesc = "" +
 	"\x15PROVIDER_AZURE_OPENAI\x10\x03\x12\x13\n" +
 	"\x0fPROVIDER_GEMINI\x10\x04\x12\x14\n" +
 	"\x10PROVIDER_BEDROCK\x10\x05\x12\x1e\n" +
-	"\x1aPROVIDER_OPENAI_COMPATIBLE\x10\x062\xf7\x0f\n" +
+	"\x1aPROVIDER_OPENAI_COMPATIBLE\x10\x062\xd9\x10\n" +
 	"\tAiService\x12`\n" +
 	"\x0fSearchAndAnswer\x12%.steward.ai.v1.SearchAndAnswerRequest\x1a&.steward.ai.v1.SearchAndAnswerResponse\x12`\n" +
 	"\x0fAuthoringAssist\x12%.steward.ai.v1.AuthoringAssistRequest\x1a&.steward.ai.v1.AuthoringAssistResponse\x12T\n" +
@@ -3457,7 +3606,8 @@ const file_steward_ai_v1_ai_proto_rawDesc = "" +
 	"\fTestProvider\x12\".steward.ai.v1.TestProviderRequest\x1a#.steward.ai.v1.TestProviderResponse\x12c\n" +
 	"\x10AcceptDataNotice\x12&.steward.ai.v1.AcceptDataNoticeRequest\x1a'.steward.ai.v1.AcceptDataNoticeResponse\x12`\n" +
 	"\x0fSetMonthlyLimit\x12%.steward.ai.v1.SetMonthlyLimitRequest\x1a&.steward.ai.v1.SetMonthlyLimitResponse\x12K\n" +
-	"\bGetUsage\x12\x1e.steward.ai.v1.GetUsageRequest\x1a\x1f.steward.ai.v1.GetUsageResponse\x12Z\n" +
+	"\bGetUsage\x12\x1e.steward.ai.v1.GetUsageRequest\x1a\x1f.steward.ai.v1.GetUsageResponse\x12`\n" +
+	"\x0fGetMyUsageLimit\x12%.steward.ai.v1.GetMyUsageLimitRequest\x1a&.steward.ai.v1.GetMyUsageLimitResponse\x12Z\n" +
 	"\rSetOrgContext\x12#.steward.ai.v1.SetOrgContextRequest\x1a$.steward.ai.v1.SetOrgContextResponse\x12`\n" +
 	"\x0fGetTopQuestions\x12%.steward.ai.v1.GetTopQuestionsRequest\x1a&.steward.ai.v1.GetTopQuestionsResponse\x12c\n" +
 	"\x10GetPolicySummary\x12&.steward.ai.v1.GetPolicySummaryRequest\x1a'.steward.ai.v1.GetPolicySummaryResponse\x12o\n" +
@@ -3478,7 +3628,7 @@ func file_steward_ai_v1_ai_proto_rawDescGZIP() []byte {
 }
 
 var file_steward_ai_v1_ai_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_steward_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
+var file_steward_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 52)
 var file_steward_ai_v1_ai_proto_goTypes = []any{
 	(AssistOperation)(0),                  // 0: steward.ai.v1.AssistOperation
 	(JobOperation)(0),                     // 1: steward.ai.v1.JobOperation
@@ -3521,19 +3671,21 @@ var file_steward_ai_v1_ai_proto_goTypes = []any{
 	(*SetMonthlyLimitResponse)(nil),       // 38: steward.ai.v1.SetMonthlyLimitResponse
 	(*GetUsageRequest)(nil),               // 39: steward.ai.v1.GetUsageRequest
 	(*GetUsageResponse)(nil),              // 40: steward.ai.v1.GetUsageResponse
-	(*SetOrgContextRequest)(nil),          // 41: steward.ai.v1.SetOrgContextRequest
-	(*SetOrgContextResponse)(nil),         // 42: steward.ai.v1.SetOrgContextResponse
-	(*GetTopQuestionsRequest)(nil),        // 43: steward.ai.v1.GetTopQuestionsRequest
-	(*GetTopQuestionsResponse)(nil),       // 44: steward.ai.v1.GetTopQuestionsResponse
-	(*GetPolicySummaryRequest)(nil),       // 45: steward.ai.v1.GetPolicySummaryRequest
-	(*GetPolicySummaryResponse)(nil),      // 46: steward.ai.v1.GetPolicySummaryResponse
-	(*SetAIRetrievalConfigRequest)(nil),   // 47: steward.ai.v1.SetAIRetrievalConfigRequest
-	(*SetAIRetrievalConfigResponse)(nil),  // 48: steward.ai.v1.SetAIRetrievalConfigResponse
-	(*SetUserAiQueryLimitRequest)(nil),    // 49: steward.ai.v1.SetUserAiQueryLimitRequest
-	(*SetUserAiQueryLimitResponse)(nil),   // 50: steward.ai.v1.SetUserAiQueryLimitResponse
-	(*GetRelatedPoliciesRequest)(nil),     // 51: steward.ai.v1.GetRelatedPoliciesRequest
-	(*GetRelatedPoliciesResponse)(nil),    // 52: steward.ai.v1.GetRelatedPoliciesResponse
-	(*RelatedPolicy)(nil),                 // 53: steward.ai.v1.RelatedPolicy
+	(*GetMyUsageLimitRequest)(nil),        // 41: steward.ai.v1.GetMyUsageLimitRequest
+	(*GetMyUsageLimitResponse)(nil),       // 42: steward.ai.v1.GetMyUsageLimitResponse
+	(*SetOrgContextRequest)(nil),          // 43: steward.ai.v1.SetOrgContextRequest
+	(*SetOrgContextResponse)(nil),         // 44: steward.ai.v1.SetOrgContextResponse
+	(*GetTopQuestionsRequest)(nil),        // 45: steward.ai.v1.GetTopQuestionsRequest
+	(*GetTopQuestionsResponse)(nil),       // 46: steward.ai.v1.GetTopQuestionsResponse
+	(*GetPolicySummaryRequest)(nil),       // 47: steward.ai.v1.GetPolicySummaryRequest
+	(*GetPolicySummaryResponse)(nil),      // 48: steward.ai.v1.GetPolicySummaryResponse
+	(*SetAIRetrievalConfigRequest)(nil),   // 49: steward.ai.v1.SetAIRetrievalConfigRequest
+	(*SetAIRetrievalConfigResponse)(nil),  // 50: steward.ai.v1.SetAIRetrievalConfigResponse
+	(*SetUserAiQueryLimitRequest)(nil),    // 51: steward.ai.v1.SetUserAiQueryLimitRequest
+	(*SetUserAiQueryLimitResponse)(nil),   // 52: steward.ai.v1.SetUserAiQueryLimitResponse
+	(*GetRelatedPoliciesRequest)(nil),     // 53: steward.ai.v1.GetRelatedPoliciesRequest
+	(*GetRelatedPoliciesResponse)(nil),    // 54: steward.ai.v1.GetRelatedPoliciesResponse
+	(*RelatedPolicy)(nil),                 // 55: steward.ai.v1.RelatedPolicy
 }
 var file_steward_ai_v1_ai_proto_depIdxs = []int32{
 	4,  // 0: steward.ai.v1.SearchAndAnswerRequest.scope:type_name -> steward.ai.v1.ReadScope
@@ -3555,7 +3707,7 @@ var file_steward_ai_v1_ai_proto_depIdxs = []int32{
 	25, // 16: steward.ai.v1.AcceptDataNoticeResponse.data_notice:type_name -> steward.ai.v1.DataNotice
 	4,  // 17: steward.ai.v1.GetTopQuestionsRequest.scope:type_name -> steward.ai.v1.ReadScope
 	4,  // 18: steward.ai.v1.GetRelatedPoliciesRequest.scope:type_name -> steward.ai.v1.ReadScope
-	53, // 19: steward.ai.v1.GetRelatedPoliciesResponse.related:type_name -> steward.ai.v1.RelatedPolicy
+	55, // 19: steward.ai.v1.GetRelatedPoliciesResponse.related:type_name -> steward.ai.v1.RelatedPolicy
 	5,  // 20: steward.ai.v1.AiService.SearchAndAnswer:input_type -> steward.ai.v1.SearchAndAnswerRequest
 	10, // 21: steward.ai.v1.AiService.AuthoringAssist:input_type -> steward.ai.v1.AuthoringAssistRequest
 	12, // 22: steward.ai.v1.AiService.SubmitAIJob:input_type -> steward.ai.v1.SubmitAIJobRequest
@@ -3571,35 +3723,37 @@ var file_steward_ai_v1_ai_proto_depIdxs = []int32{
 	35, // 32: steward.ai.v1.AiService.AcceptDataNotice:input_type -> steward.ai.v1.AcceptDataNoticeRequest
 	37, // 33: steward.ai.v1.AiService.SetMonthlyLimit:input_type -> steward.ai.v1.SetMonthlyLimitRequest
 	39, // 34: steward.ai.v1.AiService.GetUsage:input_type -> steward.ai.v1.GetUsageRequest
-	41, // 35: steward.ai.v1.AiService.SetOrgContext:input_type -> steward.ai.v1.SetOrgContextRequest
-	43, // 36: steward.ai.v1.AiService.GetTopQuestions:input_type -> steward.ai.v1.GetTopQuestionsRequest
-	45, // 37: steward.ai.v1.AiService.GetPolicySummary:input_type -> steward.ai.v1.GetPolicySummaryRequest
-	47, // 38: steward.ai.v1.AiService.SetAIRetrievalConfig:input_type -> steward.ai.v1.SetAIRetrievalConfigRequest
-	49, // 39: steward.ai.v1.AiService.SetUserAiQueryLimit:input_type -> steward.ai.v1.SetUserAiQueryLimitRequest
-	51, // 40: steward.ai.v1.AiService.GetRelatedPolicies:input_type -> steward.ai.v1.GetRelatedPoliciesRequest
-	6,  // 41: steward.ai.v1.AiService.SearchAndAnswer:output_type -> steward.ai.v1.SearchAndAnswerResponse
-	11, // 42: steward.ai.v1.AiService.AuthoringAssist:output_type -> steward.ai.v1.AuthoringAssistResponse
-	13, // 43: steward.ai.v1.AiService.SubmitAIJob:output_type -> steward.ai.v1.SubmitAIJobResponse
-	15, // 44: steward.ai.v1.AiService.GetAIJob:output_type -> steward.ai.v1.GetAIJobResponse
-	17, // 45: steward.ai.v1.AiService.GetAIJobResult:output_type -> steward.ai.v1.GetAIJobResultResponse
-	20, // 46: steward.ai.v1.AiService.GetProviderStatus:output_type -> steward.ai.v1.GetProviderStatusResponse
-	22, // 47: steward.ai.v1.AiService.GetAIEnabled:output_type -> steward.ai.v1.GetAIEnabledResponse
-	24, // 48: steward.ai.v1.AiService.SetAIEnabled:output_type -> steward.ai.v1.SetAIEnabledResponse
-	28, // 49: steward.ai.v1.AiService.GetAIConfig:output_type -> steward.ai.v1.GetAIConfigResponse
-	30, // 50: steward.ai.v1.AiService.SetProviderConfig:output_type -> steward.ai.v1.SetProviderConfigResponse
-	32, // 51: steward.ai.v1.AiService.SetProviderCredential:output_type -> steward.ai.v1.SetProviderCredentialResponse
-	34, // 52: steward.ai.v1.AiService.TestProvider:output_type -> steward.ai.v1.TestProviderResponse
-	36, // 53: steward.ai.v1.AiService.AcceptDataNotice:output_type -> steward.ai.v1.AcceptDataNoticeResponse
-	38, // 54: steward.ai.v1.AiService.SetMonthlyLimit:output_type -> steward.ai.v1.SetMonthlyLimitResponse
-	40, // 55: steward.ai.v1.AiService.GetUsage:output_type -> steward.ai.v1.GetUsageResponse
-	42, // 56: steward.ai.v1.AiService.SetOrgContext:output_type -> steward.ai.v1.SetOrgContextResponse
-	44, // 57: steward.ai.v1.AiService.GetTopQuestions:output_type -> steward.ai.v1.GetTopQuestionsResponse
-	46, // 58: steward.ai.v1.AiService.GetPolicySummary:output_type -> steward.ai.v1.GetPolicySummaryResponse
-	48, // 59: steward.ai.v1.AiService.SetAIRetrievalConfig:output_type -> steward.ai.v1.SetAIRetrievalConfigResponse
-	50, // 60: steward.ai.v1.AiService.SetUserAiQueryLimit:output_type -> steward.ai.v1.SetUserAiQueryLimitResponse
-	52, // 61: steward.ai.v1.AiService.GetRelatedPolicies:output_type -> steward.ai.v1.GetRelatedPoliciesResponse
-	41, // [41:62] is the sub-list for method output_type
-	20, // [20:41] is the sub-list for method input_type
+	41, // 35: steward.ai.v1.AiService.GetMyUsageLimit:input_type -> steward.ai.v1.GetMyUsageLimitRequest
+	43, // 36: steward.ai.v1.AiService.SetOrgContext:input_type -> steward.ai.v1.SetOrgContextRequest
+	45, // 37: steward.ai.v1.AiService.GetTopQuestions:input_type -> steward.ai.v1.GetTopQuestionsRequest
+	47, // 38: steward.ai.v1.AiService.GetPolicySummary:input_type -> steward.ai.v1.GetPolicySummaryRequest
+	49, // 39: steward.ai.v1.AiService.SetAIRetrievalConfig:input_type -> steward.ai.v1.SetAIRetrievalConfigRequest
+	51, // 40: steward.ai.v1.AiService.SetUserAiQueryLimit:input_type -> steward.ai.v1.SetUserAiQueryLimitRequest
+	53, // 41: steward.ai.v1.AiService.GetRelatedPolicies:input_type -> steward.ai.v1.GetRelatedPoliciesRequest
+	6,  // 42: steward.ai.v1.AiService.SearchAndAnswer:output_type -> steward.ai.v1.SearchAndAnswerResponse
+	11, // 43: steward.ai.v1.AiService.AuthoringAssist:output_type -> steward.ai.v1.AuthoringAssistResponse
+	13, // 44: steward.ai.v1.AiService.SubmitAIJob:output_type -> steward.ai.v1.SubmitAIJobResponse
+	15, // 45: steward.ai.v1.AiService.GetAIJob:output_type -> steward.ai.v1.GetAIJobResponse
+	17, // 46: steward.ai.v1.AiService.GetAIJobResult:output_type -> steward.ai.v1.GetAIJobResultResponse
+	20, // 47: steward.ai.v1.AiService.GetProviderStatus:output_type -> steward.ai.v1.GetProviderStatusResponse
+	22, // 48: steward.ai.v1.AiService.GetAIEnabled:output_type -> steward.ai.v1.GetAIEnabledResponse
+	24, // 49: steward.ai.v1.AiService.SetAIEnabled:output_type -> steward.ai.v1.SetAIEnabledResponse
+	28, // 50: steward.ai.v1.AiService.GetAIConfig:output_type -> steward.ai.v1.GetAIConfigResponse
+	30, // 51: steward.ai.v1.AiService.SetProviderConfig:output_type -> steward.ai.v1.SetProviderConfigResponse
+	32, // 52: steward.ai.v1.AiService.SetProviderCredential:output_type -> steward.ai.v1.SetProviderCredentialResponse
+	34, // 53: steward.ai.v1.AiService.TestProvider:output_type -> steward.ai.v1.TestProviderResponse
+	36, // 54: steward.ai.v1.AiService.AcceptDataNotice:output_type -> steward.ai.v1.AcceptDataNoticeResponse
+	38, // 55: steward.ai.v1.AiService.SetMonthlyLimit:output_type -> steward.ai.v1.SetMonthlyLimitResponse
+	40, // 56: steward.ai.v1.AiService.GetUsage:output_type -> steward.ai.v1.GetUsageResponse
+	42, // 57: steward.ai.v1.AiService.GetMyUsageLimit:output_type -> steward.ai.v1.GetMyUsageLimitResponse
+	44, // 58: steward.ai.v1.AiService.SetOrgContext:output_type -> steward.ai.v1.SetOrgContextResponse
+	46, // 59: steward.ai.v1.AiService.GetTopQuestions:output_type -> steward.ai.v1.GetTopQuestionsResponse
+	48, // 60: steward.ai.v1.AiService.GetPolicySummary:output_type -> steward.ai.v1.GetPolicySummaryResponse
+	50, // 61: steward.ai.v1.AiService.SetAIRetrievalConfig:output_type -> steward.ai.v1.SetAIRetrievalConfigResponse
+	52, // 62: steward.ai.v1.AiService.SetUserAiQueryLimit:output_type -> steward.ai.v1.SetUserAiQueryLimitResponse
+	54, // 63: steward.ai.v1.AiService.GetRelatedPolicies:output_type -> steward.ai.v1.GetRelatedPoliciesResponse
+	42, // [42:64] is the sub-list for method output_type
+	20, // [20:42] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
 	20, // [20:20] is the sub-list for extension extendee
 	0,  // [0:20] is the sub-list for field type_name
@@ -3616,7 +3770,7 @@ func file_steward_ai_v1_ai_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_steward_ai_v1_ai_proto_rawDesc), len(file_steward_ai_v1_ai_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   50,
+			NumMessages:   52,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

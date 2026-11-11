@@ -311,6 +311,23 @@ type stubQuotaCounter struct {
 	err     error
 	calls   int
 	lastUID string
+
+	// usedBy scripts the read-only count per person; a person not in it
+	// reads as used. peeks records who was read.
+	usedBy map[string]int64
+	peeks  []string
+}
+
+// Used is the read-only count: it never counts a query.
+func (s *stubQuotaCounter) Used(_ context.Context, userID string, _ time.Time) (int64, error) {
+	s.peeks = append(s.peeks, userID)
+	if s.err != nil {
+		return 0, s.err
+	}
+	if n, ok := s.usedBy[userID]; ok {
+		return n, nil
+	}
+	return s.used, nil
 }
 
 func (s *stubQuotaCounter) Consume(_ context.Context, userID string, _ time.Time) (int64, error) {

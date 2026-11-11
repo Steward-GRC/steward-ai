@@ -66,6 +66,11 @@ service AiService {
   rpc SetMonthlyLimit(SetMonthlyLimitRequest) returns (SetMonthlyLimitResponse);
   // GetUsage reads the usage meter for the current month.
   rpc GetUsage(GetUsageRequest) returns (GetUsageResponse);
+  // GetMyUsageLimit reports whether the forwarded actor can still use AI
+  // today: the organisation's monthly limit and the actor's own daily limit.
+  // It reads the counters and never consumes a query. It answers only for
+  // the actor; the request names nobody else.
+  rpc GetMyUsageLimit(GetMyUsageLimitRequest) returns (GetMyUsageLimitResponse);
   // SetOrgContext sets the organisation context prepended to every prompt.
   // Empty by default; empty sends none.
   rpc SetOrgContext(SetOrgContextRequest) returns (SetOrgContextResponse);
@@ -406,6 +411,28 @@ message GetUsageResponse {
   int64 monthly_limit = 5;
   // resets_at is the start of next month, RFC 3339.
   string resets_at = 6;
+}
+
+message GetMyUsageLimitRequest {}
+
+message GetMyUsageLimitResponse {
+  // daily_limit is the actor's effective queries per UTC day: their override
+  // when they have one, else the default. Zero means unlimited.
+  int64 daily_limit = 1;
+  // daily_used is the queries counted for the actor today.
+  int64 daily_used = 2;
+  // daily_resets_at is the next UTC midnight, RFC 3339.
+  string daily_resets_at = 3;
+  // daily_limit_reached is true when the actor's next query would be
+  // refused for the daily limit.
+  bool daily_limit_reached = 4;
+  // monthly_limit_reached is true when the organisation's monthly limit on
+  // provider requests is reached. False when no monthly limit is set.
+  bool monthly_limit_reached = 5;
+  // monthly_resets_at is the start of next month, RFC 3339.
+  string monthly_resets_at = 6;
+  // limit_reached is daily_limit_reached or monthly_limit_reached.
+  bool limit_reached = 7;
 }
 
 message SetOrgContextRequest {

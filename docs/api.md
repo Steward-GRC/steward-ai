@@ -39,6 +39,7 @@ database query, so nothing outside it reaches the model or the answer.
 | `SetProviderConfig`, `SetProviderCredential`, `TestProvider` | The provider, its settings and its credential, and a test call. |
 | `AcceptDataNotice` | Records an administrator's acceptance of the data notice. |
 | `SetMonthlyLimit`, `GetUsage` | The organisation's monthly request limit and the usage meter. |
+| `GetMyUsageLimit` | Whether the caller has reached the monthly or their own daily limit. Read-only (no query is counted) and about the caller only. |
 | `SetOrgContext` | The organisation context put in front of every prompt; empty by default. |
 | `SetAIRetrievalConfig`, `SetUserAiQueryLimit` | The retrieval candidate count; one person's daily limit. |
 

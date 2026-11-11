@@ -8,6 +8,7 @@ package quota
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -54,5 +55,20 @@ func (c *Counter) Consume(ctx context.Context, userID string, now time.Time) (us
 	// Derived from now, not the wall clock, so the expiry matches the window.
 	ttl := max(ResetAt(now).Sub(now), time.Second)
 	_ = c.rdb.Expire(ctx, key, ttl).Err()
+	return n, nil
+}
+
+// Used is userID's count for now's UTC day, read without counting a query.
+// A person with no queries today reads 0. A Valkey error is returned so the
+// caller applies its own policy.
+func (c *Counter) Used(ctx context.Context, userID string, now time.Time) (int64, error) {
+	key := dayKey(userID, now)
+	n, err := c.rdb.Get(ctx, key).Int64()
+	if errors.Is(err, redis.Nil) {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, fmt.Errorf("quota: get %q: %w", key, err)
+	}
 	return n, nil
 }

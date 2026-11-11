@@ -29,6 +29,7 @@ var CallerPolicy = workloadidentity.Policy{
 	aiv1.AiService_AcceptDataNotice_FullMethodName:      gateway,
 	aiv1.AiService_SetMonthlyLimit_FullMethodName:       gateway,
 	aiv1.AiService_GetUsage_FullMethodName:              gateway,
+	aiv1.AiService_GetMyUsageLimit_FullMethodName:       gateway,
 	aiv1.AiService_SetOrgContext_FullMethodName:         gateway,
 	aiv1.AiService_GetTopQuestions_FullMethodName:       gateway,
 	aiv1.AiService_GetPolicySummary_FullMethodName:      gateway,

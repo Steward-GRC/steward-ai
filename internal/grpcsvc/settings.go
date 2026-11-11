@@ -17,6 +17,7 @@ import (
 	"github.com/Steward-GRC/steward-ai/internal/airules"
 	"github.com/Steward-GRC/steward-ai/internal/errcodes"
 	"github.com/Steward-GRC/steward-ai/internal/provider"
+	"github.com/Steward-GRC/steward-ai/internal/quota"
 	"github.com/Steward-GRC/steward-ai/internal/store"
 )
 
@@ -248,6 +249,58 @@ func (s *AiServiceServer) GetUsage(ctx context.Context, _ *aiv1.GetUsageRequest)
 		MonthlyLimit: st.MonthlyLimit,
 		ResetsAt:     nextMonth(now).Format(time.RFC3339),
 	}, nil
+}
+
+// GetMyUsageLimit reports whether the forwarded actor has reached the
+// organisation's monthly limit or their own daily limit, so the gateway can
+// tell them before they try. It only reads: no query is counted. The request
+// names nobody, so a caller can read only their own count.
+func (s *AiServiceServer) GetMyUsageLimit(ctx context.Context, _ *aiv1.GetMyUsageLimitRequest) (*aiv1.GetMyUsageLimitResponse, error) {
+	actor, err := s.requireActor(ctx)
+	if err != nil {
+		return nil, err
+	}
+	l := s.log.Ctx(ctx)
+	l.Debug("ai usage limit read: start", log.F("user_id", actor.Subject))
+	st, err := s.readSettings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	now := s.now()
+	resp := &aiv1.GetMyUsageLimitResponse{
+		DailyResetsAt:   quota.ResetAt(now).UTC().Format(time.RFC3339),
+		MonthlyResetsAt: nextMonth(now).UTC().Format(time.RFC3339),
+	}
+
+	if st.MonthlyLimit > 0 {
+		u, err := s.d.Usage.Month(ctx, now)
+		if err != nil {
+			l.Error(err, "ai usage unreadable", log.F("user_id", actor.Subject))
+			return nil, errcodes.New(ctx, errcodes.CodeSettingsUnavailable)
+		}
+		resp.MonthlyLimitReached = u.Requests >= st.MonthlyLimit
+	}
+
+	limit, unlimited := s.effectiveQueryLimit(ctx, actor.Subject)
+	used, err := s.d.Quota.Used(ctx, actor.Subject, now)
+	if err != nil {
+		// The intake gate fails open on a counter error, so the read does too.
+		l.Warn("ai query quota counter unreadable; reporting no daily use", log.F("user_id", actor.Subject), log.F("error", err.Error()))
+		used = 0
+	}
+	resp.DailyUsed = used
+	if !unlimited {
+		resp.DailyLimit = int64(limit)
+		// The next query is refused once the count is past the limit, so the
+		// limit is reached when the count is at it.
+		resp.DailyLimitReached = used >= int64(limit)
+	}
+	resp.LimitReached = resp.DailyLimitReached || resp.MonthlyLimitReached
+
+	l.Debug("ai usage limit read", log.F("user_id", actor.Subject),
+		log.F("daily_limit_reached", resp.DailyLimitReached), log.F("monthly_limit_reached", resp.MonthlyLimitReached),
+		log.F("daily_limit", resp.DailyLimit), log.F("daily_used", resp.DailyUsed))
+	return resp, nil
 }
 
 // SetOrgContext sets the organisation context sent with every prompt; empty
