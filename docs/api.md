@@ -74,6 +74,14 @@ so a later model change doesn't affect it.
 | `RELATED_REEVAL` | the service, after a publish | no |
 | `RELATIONSHIP_LEARN` | the operator, nightly | no |
 
+**Framing.** The `DRAFT` and `REVISE` inputs take an optional `framing` (`PLAIN`, `PROFESSIONAL`,
+`FORMAL` or `CUSTOM`, case-insensitive) that sets how the text reads: plain language at about a
+5th-grade level, a professional business register, or a formal and legal one. `CUSTOM` also needs
+`customFraming`, the author's own wording, at most 500 characters. Without `framing` the prompts
+are unchanged. The wording is passed to the model as data in the user message, never in the system
+prompt, and cannot override the drafting or revision rules. A job with an unknown framing, or a
+`CUSTOM` framing with blank or over-long wording, fails before any model call.
+
 ## Events
 
 **In, from core.** JSON on core's `jobs` topic exchange, into two durable queues:

@@ -31,6 +31,11 @@ type DraftJobInput struct {
 	// means every category is suggested against an empty library.
 	EnrichmentOptOut  EnrichmentOptOut  `json:"enrichmentOptOut"`
 	EnrichmentLibrary EnrichmentLibrary `json:"enrichmentLibrary"`
+	// Framing is how the draft should read (PLAIN, PROFESSIONAL, FORMAL or
+	// CUSTOM); absent keeps the default tone. CustomFraming is the author's
+	// wording for CUSTOM.
+	Framing       Framing `json:"framing,omitempty"`
+	CustomFraming string  `json:"customFraming,omitempty"`
 }
 
 // MarshalJobInput encodes a DraftJobInput for a job's input.
@@ -67,6 +72,8 @@ func (in DraftJobInput) ToDraftRequest(actorUserID, categoryID, modelID string) 
 		ReferenceHints:     in.ReferenceHints,
 		ReferenceDocuments: in.ReferenceDocuments,
 		ModelID:            modelID,
+		Framing:            in.Framing,
+		CustomFraming:      in.CustomFraming,
 	}
 	if in.Enrichments != nil {
 		req.Enrichments = *in.Enrichments

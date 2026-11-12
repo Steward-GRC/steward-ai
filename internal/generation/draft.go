@@ -88,6 +88,10 @@ type DraftRequest struct {
 	Enrichments EnrichmentContext
 	// ModelID is the job's snapshotted model; empty uses the configured one.
 	ModelID string
+	// Framing is how the draft should read; empty keeps the default tone.
+	// CustomFraming is the author's wording, used only with FramingCustom.
+	Framing       Framing
+	CustomFraming string
 }
 
 // DraftedSection is one generated section. The JSON keys are what the job
@@ -150,10 +154,16 @@ func (d *Draft) Generate(ctx context.Context, req DraftRequest) (DraftResponse, 
 		return DraftResponse{}, fmt.Errorf("draft: brief is required")
 	}
 
+	framing, err := validateFraming(req.Framing, req.CustomFraming)
+	if err != nil {
+		return DraftResponse{}, fmt.Errorf("draft: %w", err)
+	}
+	system := draftSystemPrompt(framing)
+
 	sections := make([]DraftedSection, 0, len(req.Sections))
 	for _, s := range req.Sections {
 		resp, err := d.gen.Complete(ctx, provider.Request{
-			System:         draftSectionSystemPrompt,
+			System:         system,
 			Messages:       []provider.Message{{Role: provider.RoleUser, Content: buildDraftSectionUserPrompt(req, s)}},
 			MaxTokens:      d.maxTokens,
 			Model:          req.ModelID,
@@ -224,6 +234,7 @@ func buildDraftSectionUserPrompt(req DraftRequest, current DraftSection) string 
 	}
 
 	sb.WriteString(req.Enrichments.render())
+	sb.WriteString(customFramingBlock(req.Framing, req.CustomFraming))
 
 	fmt.Fprintf(&sb, "\nWrite the %q section now (the current_section above), comprehensively and thoroughly. "+
 		"Return only that section's body text — no other section, no wrapping tags, no restated heading.", current.Title)
