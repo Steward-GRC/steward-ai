@@ -160,3 +160,25 @@ func TestLoadOperatorTTLsMayBeZero(t *testing.T) {
 	require.Zero(t, c.SucceededTTL, "zero keeps finished jobs")
 	require.Zero(t, c.FailedTTL)
 }
+
+func TestLoadOTLPEndpoint(t *testing.T) {
+	for name, tc := range map[string]struct{ set, want string }{
+		"unset": {"", ""},
+		"empty": {"-", ""},
+		"set":   {"otel.example.org:4317", "otel.example.org:4317"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			m := required()
+			switch tc.set {
+			case "":
+			case "-":
+				m["OTEL_EXPORTER_OTLP_ENDPOINT"] = ""
+			default:
+				m["OTEL_EXPORTER_OTLP_ENDPOINT"] = tc.set
+			}
+			c, err := config.Load(env(m))
+			require.NoError(t, err)
+			require.Equal(t, tc.want, c.OTLPEndpoint, "unset or empty turns tracing off")
+		})
+	}
+}

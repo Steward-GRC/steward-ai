@@ -46,10 +46,11 @@ type Embed struct {
 
 // Common is what the server and the operator both need.
 type Common struct {
-	DatabaseDSN  string
-	RabbitURL    string
-	RedisAddr    string
-	RedisPass    string
+	DatabaseDSN string
+	RabbitURL   string
+	RedisAddr   string
+	RedisPass   string
+	// OTLPEndpoint is the OpenTelemetry collector; empty turns tracing off.
 	OTLPEndpoint string
 	// SettingsKey seals the provider credential in ai_config.
 	SettingsKey []byte
@@ -163,7 +164,7 @@ func (r *reader) common() Common {
 		RabbitURL:      r.required("RABBITMQ_URL"),
 		RedisAddr:      r.required("REDIS_ADDR"),
 		RedisPass:      r.getenv("REDIS_PASSWORD"),
-		OTLPEndpoint:   r.str("OTEL_EXPORTER_OTLP_ENDPOINT", "localhost:4317"),
+		OTLPEndpoint:   r.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"),
 		ProbePort:      r.str("PROBE_PORT", "8080"),
 		GenerationStub: r.bool("AI_GENERATION_STUB", false),
 		JobNamespace:   r.str("AI_JOB_NAMESPACE", r.str("POD_NAMESPACE", "steward")),
