@@ -1146,6 +1146,105 @@ func (x *GetAIJobResponse) GetQaResult() *QaJobResult {
 	return nil
 }
 
+type GetAIJobResultRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAIJobResultRequest) Reset() {
+	*x = GetAIJobResultRequest{}
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAIJobResultRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAIJobResultRequest) ProtoMessage() {}
+
+func (x *GetAIJobResultRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAIJobResultRequest.ProtoReflect.Descriptor instead.
+func (*GetAIJobResultRequest) Descriptor() ([]byte, []int) {
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetAIJobResultRequest) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+type GetAIJobResultResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// operation is the job's operation name, for example "DRAFT".
+	Operation string `protobuf:"bytes,1,opt,name=operation,proto3" json:"operation,omitempty"`
+	// result_json is the generation payload as JSON, the same shape as the
+	// "result" member of the cached envelope.
+	ResultJson    string `protobuf:"bytes,2,opt,name=result_json,json=resultJson,proto3" json:"result_json,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAIJobResultResponse) Reset() {
+	*x = GetAIJobResultResponse{}
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAIJobResultResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAIJobResultResponse) ProtoMessage() {}
+
+func (x *GetAIJobResultResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAIJobResultResponse.ProtoReflect.Descriptor instead.
+func (*GetAIJobResultResponse) Descriptor() ([]byte, []int) {
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetAIJobResultResponse) GetOperation() string {
+	if x != nil {
+		return x.Operation
+	}
+	return ""
+}
+
+func (x *GetAIJobResultResponse) GetResultJson() string {
+	if x != nil {
+		return x.ResultJson
+	}
+	return ""
+}
+
 type QaJobResult struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	Answer             string                 `protobuf:"bytes,1,opt,name=answer,proto3" json:"answer,omitempty"`
@@ -1159,7 +1258,7 @@ type QaJobResult struct {
 
 func (x *QaJobResult) Reset() {
 	*x = QaJobResult{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[12]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1171,7 +1270,7 @@ func (x *QaJobResult) String() string {
 func (*QaJobResult) ProtoMessage() {}
 
 func (x *QaJobResult) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[12]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1184,7 +1283,7 @@ func (x *QaJobResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QaJobResult.ProtoReflect.Descriptor instead.
 func (*QaJobResult) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{12}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *QaJobResult) GetAnswer() string {
@@ -1230,7 +1329,7 @@ type GetProviderStatusRequest struct {
 
 func (x *GetProviderStatusRequest) Reset() {
 	*x = GetProviderStatusRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[13]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1242,7 +1341,7 @@ func (x *GetProviderStatusRequest) String() string {
 func (*GetProviderStatusRequest) ProtoMessage() {}
 
 func (x *GetProviderStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[13]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1255,7 +1354,7 @@ func (x *GetProviderStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProviderStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetProviderStatusRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{13}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{15}
 }
 
 type GetProviderStatusResponse struct {
@@ -1271,7 +1370,7 @@ type GetProviderStatusResponse struct {
 
 func (x *GetProviderStatusResponse) Reset() {
 	*x = GetProviderStatusResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[14]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1283,7 +1382,7 @@ func (x *GetProviderStatusResponse) String() string {
 func (*GetProviderStatusResponse) ProtoMessage() {}
 
 func (x *GetProviderStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[14]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1296,7 +1395,7 @@ func (x *GetProviderStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProviderStatusResponse.ProtoReflect.Descriptor instead.
 func (*GetProviderStatusResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{14}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetProviderStatusResponse) GetAvailable() bool {
@@ -1321,7 +1420,7 @@ type GetAIEnabledRequest struct {
 
 func (x *GetAIEnabledRequest) Reset() {
 	*x = GetAIEnabledRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[15]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1333,7 +1432,7 @@ func (x *GetAIEnabledRequest) String() string {
 func (*GetAIEnabledRequest) ProtoMessage() {}
 
 func (x *GetAIEnabledRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[15]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1346,7 +1445,7 @@ func (x *GetAIEnabledRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAIEnabledRequest.ProtoReflect.Descriptor instead.
 func (*GetAIEnabledRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{15}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{17}
 }
 
 type GetAIEnabledResponse struct {
@@ -1358,7 +1457,7 @@ type GetAIEnabledResponse struct {
 
 func (x *GetAIEnabledResponse) Reset() {
 	*x = GetAIEnabledResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[16]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1370,7 +1469,7 @@ func (x *GetAIEnabledResponse) String() string {
 func (*GetAIEnabledResponse) ProtoMessage() {}
 
 func (x *GetAIEnabledResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[16]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1383,7 +1482,7 @@ func (x *GetAIEnabledResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAIEnabledResponse.ProtoReflect.Descriptor instead.
 func (*GetAIEnabledResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{16}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *GetAIEnabledResponse) GetEnabled() bool {
@@ -1402,7 +1501,7 @@ type SetAIEnabledRequest struct {
 
 func (x *SetAIEnabledRequest) Reset() {
 	*x = SetAIEnabledRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[17]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1414,7 +1513,7 @@ func (x *SetAIEnabledRequest) String() string {
 func (*SetAIEnabledRequest) ProtoMessage() {}
 
 func (x *SetAIEnabledRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[17]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1427,7 +1526,7 @@ func (x *SetAIEnabledRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAIEnabledRequest.ProtoReflect.Descriptor instead.
 func (*SetAIEnabledRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{17}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *SetAIEnabledRequest) GetEnabled() bool {
@@ -1446,7 +1545,7 @@ type SetAIEnabledResponse struct {
 
 func (x *SetAIEnabledResponse) Reset() {
 	*x = SetAIEnabledResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[18]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1458,7 +1557,7 @@ func (x *SetAIEnabledResponse) String() string {
 func (*SetAIEnabledResponse) ProtoMessage() {}
 
 func (x *SetAIEnabledResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[18]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1471,7 +1570,7 @@ func (x *SetAIEnabledResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAIEnabledResponse.ProtoReflect.Descriptor instead.
 func (*SetAIEnabledResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{18}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *SetAIEnabledResponse) GetEnabled() bool {
@@ -1499,7 +1598,7 @@ type DataNotice struct {
 
 func (x *DataNotice) Reset() {
 	*x = DataNotice{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[19]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1511,7 +1610,7 @@ func (x *DataNotice) String() string {
 func (*DataNotice) ProtoMessage() {}
 
 func (x *DataNotice) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[19]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1524,7 +1623,7 @@ func (x *DataNotice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DataNotice.ProtoReflect.Descriptor instead.
 func (*DataNotice) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{19}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DataNotice) GetCurrentVersion() string {
@@ -1586,7 +1685,7 @@ type AIConfig struct {
 
 func (x *AIConfig) Reset() {
 	*x = AIConfig{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[20]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1598,7 +1697,7 @@ func (x *AIConfig) String() string {
 func (*AIConfig) ProtoMessage() {}
 
 func (x *AIConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[20]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1611,7 +1710,7 @@ func (x *AIConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AIConfig.ProtoReflect.Descriptor instead.
 func (*AIConfig) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{20}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *AIConfig) GetEnabled() bool {
@@ -1720,7 +1819,7 @@ type GetAIConfigRequest struct {
 
 func (x *GetAIConfigRequest) Reset() {
 	*x = GetAIConfigRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[21]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1732,7 +1831,7 @@ func (x *GetAIConfigRequest) String() string {
 func (*GetAIConfigRequest) ProtoMessage() {}
 
 func (x *GetAIConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[21]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1745,7 +1844,7 @@ func (x *GetAIConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAIConfigRequest.ProtoReflect.Descriptor instead.
 func (*GetAIConfigRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{21}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{23}
 }
 
 type GetAIConfigResponse struct {
@@ -1757,7 +1856,7 @@ type GetAIConfigResponse struct {
 
 func (x *GetAIConfigResponse) Reset() {
 	*x = GetAIConfigResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[22]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1769,7 +1868,7 @@ func (x *GetAIConfigResponse) String() string {
 func (*GetAIConfigResponse) ProtoMessage() {}
 
 func (x *GetAIConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[22]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1782,7 +1881,7 @@ func (x *GetAIConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAIConfigResponse.ProtoReflect.Descriptor instead.
 func (*GetAIConfigResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{22}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetAIConfigResponse) GetConfig() *AIConfig {
@@ -1806,7 +1905,7 @@ type SetProviderConfigRequest struct {
 
 func (x *SetProviderConfigRequest) Reset() {
 	*x = SetProviderConfigRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[23]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1818,7 +1917,7 @@ func (x *SetProviderConfigRequest) String() string {
 func (*SetProviderConfigRequest) ProtoMessage() {}
 
 func (x *SetProviderConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[23]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1831,7 +1930,7 @@ func (x *SetProviderConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetProviderConfigRequest.ProtoReflect.Descriptor instead.
 func (*SetProviderConfigRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{23}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *SetProviderConfigRequest) GetProvider() Provider {
@@ -1878,7 +1977,7 @@ type SetProviderConfigResponse struct {
 
 func (x *SetProviderConfigResponse) Reset() {
 	*x = SetProviderConfigResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[24]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1890,7 +1989,7 @@ func (x *SetProviderConfigResponse) String() string {
 func (*SetProviderConfigResponse) ProtoMessage() {}
 
 func (x *SetProviderConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[24]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1903,7 +2002,7 @@ func (x *SetProviderConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetProviderConfigResponse.ProtoReflect.Descriptor instead.
 func (*SetProviderConfigResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{24}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *SetProviderConfigResponse) GetConfig() *AIConfig {
@@ -1922,7 +2021,7 @@ type SetProviderCredentialRequest struct {
 
 func (x *SetProviderCredentialRequest) Reset() {
 	*x = SetProviderCredentialRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[25]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1934,7 +2033,7 @@ func (x *SetProviderCredentialRequest) String() string {
 func (*SetProviderCredentialRequest) ProtoMessage() {}
 
 func (x *SetProviderCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[25]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1947,7 +2046,7 @@ func (x *SetProviderCredentialRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetProviderCredentialRequest.ProtoReflect.Descriptor instead.
 func (*SetProviderCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{25}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *SetProviderCredentialRequest) GetCredential() string {
@@ -1967,7 +2066,7 @@ type SetProviderCredentialResponse struct {
 
 func (x *SetProviderCredentialResponse) Reset() {
 	*x = SetProviderCredentialResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[26]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1979,7 +2078,7 @@ func (x *SetProviderCredentialResponse) String() string {
 func (*SetProviderCredentialResponse) ProtoMessage() {}
 
 func (x *SetProviderCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[26]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1992,7 +2091,7 @@ func (x *SetProviderCredentialResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetProviderCredentialResponse.ProtoReflect.Descriptor instead.
 func (*SetProviderCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{26}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *SetProviderCredentialResponse) GetCredentialSet() bool {
@@ -2017,7 +2116,7 @@ type TestProviderRequest struct {
 
 func (x *TestProviderRequest) Reset() {
 	*x = TestProviderRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[27]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2029,7 +2128,7 @@ func (x *TestProviderRequest) String() string {
 func (*TestProviderRequest) ProtoMessage() {}
 
 func (x *TestProviderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[27]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2042,7 +2141,7 @@ func (x *TestProviderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestProviderRequest.ProtoReflect.Descriptor instead.
 func (*TestProviderRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{27}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{29}
 }
 
 type TestProviderResponse struct {
@@ -2058,7 +2157,7 @@ type TestProviderResponse struct {
 
 func (x *TestProviderResponse) Reset() {
 	*x = TestProviderResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[28]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2070,7 +2169,7 @@ func (x *TestProviderResponse) String() string {
 func (*TestProviderResponse) ProtoMessage() {}
 
 func (x *TestProviderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[28]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2083,7 +2182,7 @@ func (x *TestProviderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestProviderResponse.ProtoReflect.Descriptor instead.
 func (*TestProviderResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{28}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *TestProviderResponse) GetOk() bool {
@@ -2117,7 +2216,7 @@ type AcceptDataNoticeRequest struct {
 
 func (x *AcceptDataNoticeRequest) Reset() {
 	*x = AcceptDataNoticeRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[29]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2129,7 +2228,7 @@ func (x *AcceptDataNoticeRequest) String() string {
 func (*AcceptDataNoticeRequest) ProtoMessage() {}
 
 func (x *AcceptDataNoticeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[29]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2142,7 +2241,7 @@ func (x *AcceptDataNoticeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcceptDataNoticeRequest.ProtoReflect.Descriptor instead.
 func (*AcceptDataNoticeRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{29}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *AcceptDataNoticeRequest) GetNoticeVersion() string {
@@ -2161,7 +2260,7 @@ type AcceptDataNoticeResponse struct {
 
 func (x *AcceptDataNoticeResponse) Reset() {
 	*x = AcceptDataNoticeResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[30]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2173,7 +2272,7 @@ func (x *AcceptDataNoticeResponse) String() string {
 func (*AcceptDataNoticeResponse) ProtoMessage() {}
 
 func (x *AcceptDataNoticeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[30]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2186,7 +2285,7 @@ func (x *AcceptDataNoticeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcceptDataNoticeResponse.ProtoReflect.Descriptor instead.
 func (*AcceptDataNoticeResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{30}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *AcceptDataNoticeResponse) GetDataNotice() *DataNotice {
@@ -2207,7 +2306,7 @@ type SetMonthlyLimitRequest struct {
 
 func (x *SetMonthlyLimitRequest) Reset() {
 	*x = SetMonthlyLimitRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[31]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2219,7 +2318,7 @@ func (x *SetMonthlyLimitRequest) String() string {
 func (*SetMonthlyLimitRequest) ProtoMessage() {}
 
 func (x *SetMonthlyLimitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[31]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2232,7 +2331,7 @@ func (x *SetMonthlyLimitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetMonthlyLimitRequest.ProtoReflect.Descriptor instead.
 func (*SetMonthlyLimitRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{31}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *SetMonthlyLimitRequest) GetLimit() int64 {
@@ -2251,7 +2350,7 @@ type SetMonthlyLimitResponse struct {
 
 func (x *SetMonthlyLimitResponse) Reset() {
 	*x = SetMonthlyLimitResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[32]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2263,7 +2362,7 @@ func (x *SetMonthlyLimitResponse) String() string {
 func (*SetMonthlyLimitResponse) ProtoMessage() {}
 
 func (x *SetMonthlyLimitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[32]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2276,7 +2375,7 @@ func (x *SetMonthlyLimitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetMonthlyLimitResponse.ProtoReflect.Descriptor instead.
 func (*SetMonthlyLimitResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{32}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *SetMonthlyLimitResponse) GetLimit() int64 {
@@ -2294,7 +2393,7 @@ type GetUsageRequest struct {
 
 func (x *GetUsageRequest) Reset() {
 	*x = GetUsageRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[33]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2306,7 +2405,7 @@ func (x *GetUsageRequest) String() string {
 func (*GetUsageRequest) ProtoMessage() {}
 
 func (x *GetUsageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[33]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2319,7 +2418,7 @@ func (x *GetUsageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUsageRequest.ProtoReflect.Descriptor instead.
 func (*GetUsageRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{33}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{35}
 }
 
 type GetUsageResponse struct {
@@ -2338,7 +2437,7 @@ type GetUsageResponse struct {
 
 func (x *GetUsageResponse) Reset() {
 	*x = GetUsageResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[34]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2350,7 +2449,7 @@ func (x *GetUsageResponse) String() string {
 func (*GetUsageResponse) ProtoMessage() {}
 
 func (x *GetUsageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[34]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2363,7 +2462,7 @@ func (x *GetUsageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUsageResponse.ProtoReflect.Descriptor instead.
 func (*GetUsageResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{34}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetUsageResponse) GetMonth() string {
@@ -2417,7 +2516,7 @@ type SetOrgContextRequest struct {
 
 func (x *SetOrgContextRequest) Reset() {
 	*x = SetOrgContextRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[35]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2429,7 +2528,7 @@ func (x *SetOrgContextRequest) String() string {
 func (*SetOrgContextRequest) ProtoMessage() {}
 
 func (x *SetOrgContextRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[35]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2442,7 +2541,7 @@ func (x *SetOrgContextRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetOrgContextRequest.ProtoReflect.Descriptor instead.
 func (*SetOrgContextRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{35}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *SetOrgContextRequest) GetOrgContext() string {
@@ -2461,7 +2560,7 @@ type SetOrgContextResponse struct {
 
 func (x *SetOrgContextResponse) Reset() {
 	*x = SetOrgContextResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[36]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2473,7 +2572,7 @@ func (x *SetOrgContextResponse) String() string {
 func (*SetOrgContextResponse) ProtoMessage() {}
 
 func (x *SetOrgContextResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[36]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2486,7 +2585,7 @@ func (x *SetOrgContextResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetOrgContextResponse.ProtoReflect.Descriptor instead.
 func (*SetOrgContextResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{36}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *SetOrgContextResponse) GetOrgContext() string {
@@ -2507,7 +2606,7 @@ type GetTopQuestionsRequest struct {
 
 func (x *GetTopQuestionsRequest) Reset() {
 	*x = GetTopQuestionsRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2519,7 +2618,7 @@ func (x *GetTopQuestionsRequest) String() string {
 func (*GetTopQuestionsRequest) ProtoMessage() {}
 
 func (x *GetTopQuestionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[37]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2532,7 +2631,7 @@ func (x *GetTopQuestionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTopQuestionsRequest.ProtoReflect.Descriptor instead.
 func (*GetTopQuestionsRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{37}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *GetTopQuestionsRequest) GetLimit() int32 {
@@ -2558,7 +2657,7 @@ type GetTopQuestionsResponse struct {
 
 func (x *GetTopQuestionsResponse) Reset() {
 	*x = GetTopQuestionsResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2570,7 +2669,7 @@ func (x *GetTopQuestionsResponse) String() string {
 func (*GetTopQuestionsResponse) ProtoMessage() {}
 
 func (x *GetTopQuestionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[38]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2583,7 +2682,7 @@ func (x *GetTopQuestionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTopQuestionsResponse.ProtoReflect.Descriptor instead.
 func (*GetTopQuestionsResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{38}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *GetTopQuestionsResponse) GetQuestions() []string {
@@ -2602,7 +2701,7 @@ type GetPolicySummaryRequest struct {
 
 func (x *GetPolicySummaryRequest) Reset() {
 	*x = GetPolicySummaryRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2614,7 +2713,7 @@ func (x *GetPolicySummaryRequest) String() string {
 func (*GetPolicySummaryRequest) ProtoMessage() {}
 
 func (x *GetPolicySummaryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[39]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2627,7 +2726,7 @@ func (x *GetPolicySummaryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPolicySummaryRequest.ProtoReflect.Descriptor instead.
 func (*GetPolicySummaryRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{39}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetPolicySummaryRequest) GetVersionId() string {
@@ -2649,7 +2748,7 @@ type GetPolicySummaryResponse struct {
 
 func (x *GetPolicySummaryResponse) Reset() {
 	*x = GetPolicySummaryResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2661,7 +2760,7 @@ func (x *GetPolicySummaryResponse) String() string {
 func (*GetPolicySummaryResponse) ProtoMessage() {}
 
 func (x *GetPolicySummaryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[40]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2674,7 +2773,7 @@ func (x *GetPolicySummaryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPolicySummaryResponse.ProtoReflect.Descriptor instead.
 func (*GetPolicySummaryResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{40}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GetPolicySummaryResponse) GetFound() bool {
@@ -2708,7 +2807,7 @@ type SetAIRetrievalConfigRequest struct {
 
 func (x *SetAIRetrievalConfigRequest) Reset() {
 	*x = SetAIRetrievalConfigRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2720,7 +2819,7 @@ func (x *SetAIRetrievalConfigRequest) String() string {
 func (*SetAIRetrievalConfigRequest) ProtoMessage() {}
 
 func (x *SetAIRetrievalConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[41]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2733,7 +2832,7 @@ func (x *SetAIRetrievalConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAIRetrievalConfigRequest.ProtoReflect.Descriptor instead.
 func (*SetAIRetrievalConfigRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{41}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *SetAIRetrievalConfigRequest) GetTopK() int32 {
@@ -2752,7 +2851,7 @@ type SetAIRetrievalConfigResponse struct {
 
 func (x *SetAIRetrievalConfigResponse) Reset() {
 	*x = SetAIRetrievalConfigResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2764,7 +2863,7 @@ func (x *SetAIRetrievalConfigResponse) String() string {
 func (*SetAIRetrievalConfigResponse) ProtoMessage() {}
 
 func (x *SetAIRetrievalConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[42]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2777,7 +2876,7 @@ func (x *SetAIRetrievalConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAIRetrievalConfigResponse.ProtoReflect.Descriptor instead.
 func (*SetAIRetrievalConfigResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{42}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *SetAIRetrievalConfigResponse) GetTopK() int32 {
@@ -2799,7 +2898,7 @@ type SetUserAiQueryLimitRequest struct {
 
 func (x *SetUserAiQueryLimitRequest) Reset() {
 	*x = SetUserAiQueryLimitRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2811,7 +2910,7 @@ func (x *SetUserAiQueryLimitRequest) String() string {
 func (*SetUserAiQueryLimitRequest) ProtoMessage() {}
 
 func (x *SetUserAiQueryLimitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[43]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2824,7 +2923,7 @@ func (x *SetUserAiQueryLimitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserAiQueryLimitRequest.ProtoReflect.Descriptor instead.
 func (*SetUserAiQueryLimitRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{43}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *SetUserAiQueryLimitRequest) GetTargetUserId() string {
@@ -2854,7 +2953,7 @@ type SetUserAiQueryLimitResponse struct {
 
 func (x *SetUserAiQueryLimitResponse) Reset() {
 	*x = SetUserAiQueryLimitResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2866,7 +2965,7 @@ func (x *SetUserAiQueryLimitResponse) String() string {
 func (*SetUserAiQueryLimitResponse) ProtoMessage() {}
 
 func (x *SetUserAiQueryLimitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[44]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2879,7 +2978,7 @@ func (x *SetUserAiQueryLimitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserAiQueryLimitResponse.ProtoReflect.Descriptor instead.
 func (*SetUserAiQueryLimitResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{44}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SetUserAiQueryLimitResponse) GetEffectiveLimit() int32 {
@@ -2915,7 +3014,7 @@ type GetRelatedPoliciesRequest struct {
 
 func (x *GetRelatedPoliciesRequest) Reset() {
 	*x = GetRelatedPoliciesRequest{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2927,7 +3026,7 @@ func (x *GetRelatedPoliciesRequest) String() string {
 func (*GetRelatedPoliciesRequest) ProtoMessage() {}
 
 func (x *GetRelatedPoliciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[45]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2940,7 +3039,7 @@ func (x *GetRelatedPoliciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRelatedPoliciesRequest.ProtoReflect.Descriptor instead.
 func (*GetRelatedPoliciesRequest) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{45}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *GetRelatedPoliciesRequest) GetPolicyId() string {
@@ -2973,7 +3072,7 @@ type GetRelatedPoliciesResponse struct {
 
 func (x *GetRelatedPoliciesResponse) Reset() {
 	*x = GetRelatedPoliciesResponse{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2985,7 +3084,7 @@ func (x *GetRelatedPoliciesResponse) String() string {
 func (*GetRelatedPoliciesResponse) ProtoMessage() {}
 
 func (x *GetRelatedPoliciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[46]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2998,7 +3097,7 @@ func (x *GetRelatedPoliciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRelatedPoliciesResponse.ProtoReflect.Descriptor instead.
 func (*GetRelatedPoliciesResponse) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{46}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *GetRelatedPoliciesResponse) GetRelated() []*RelatedPolicy {
@@ -3023,7 +3122,7 @@ type RelatedPolicy struct {
 
 func (x *RelatedPolicy) Reset() {
 	*x = RelatedPolicy{}
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3035,7 +3134,7 @@ func (x *RelatedPolicy) String() string {
 func (*RelatedPolicy) ProtoMessage() {}
 
 func (x *RelatedPolicy) ProtoReflect() protoreflect.Message {
-	mi := &file_steward_ai_v1_ai_proto_msgTypes[47]
+	mi := &file_steward_ai_v1_ai_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3048,7 +3147,7 @@ func (x *RelatedPolicy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RelatedPolicy.ProtoReflect.Descriptor instead.
 func (*RelatedPolicy) Descriptor() ([]byte, []int) {
-	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{47}
+	return file_steward_ai_v1_ai_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *RelatedPolicy) GetPolicyId() string {
@@ -3170,7 +3269,13 @@ const file_steward_ai_v1_ai_proto_rawDesc = "" +
 	"started_at\x18\x04 \x01(\tR\tstartedAt\x12\x1f\n" +
 	"\vfinished_at\x18\x05 \x01(\tR\n" +
 	"finishedAt\x127\n" +
-	"\tqa_result\x18\x06 \x01(\v2\x1a.steward.ai.v1.QaJobResultR\bqaResult\"\xfa\x01\n" +
+	"\tqa_result\x18\x06 \x01(\v2\x1a.steward.ai.v1.QaJobResultR\bqaResult\".\n" +
+	"\x15GetAIJobResultRequest\x12\x15\n" +
+	"\x06job_id\x18\x01 \x01(\tR\x05jobId\"W\n" +
+	"\x16GetAIJobResultResponse\x12\x1c\n" +
+	"\toperation\x18\x01 \x01(\tR\toperation\x12\x1f\n" +
+	"\vresult_json\x18\x02 \x01(\tR\n" +
+	"resultJson\"\xfa\x01\n" +
 	"\vQaJobResult\x12\x16\n" +
 	"\x06answer\x18\x01 \x01(\tR\x06answer\x125\n" +
 	"\tcitations\x18\x02 \x03(\v2\x17.steward.ai.v1.CitationR\tcitations\x120\n" +
@@ -3336,12 +3441,13 @@ const file_steward_ai_v1_ai_proto_rawDesc = "" +
 	"\x15PROVIDER_AZURE_OPENAI\x10\x03\x12\x13\n" +
 	"\x0fPROVIDER_GEMINI\x10\x04\x12\x14\n" +
 	"\x10PROVIDER_BEDROCK\x10\x05\x12\x1e\n" +
-	"\x1aPROVIDER_OPENAI_COMPATIBLE\x10\x062\x98\x0f\n" +
+	"\x1aPROVIDER_OPENAI_COMPATIBLE\x10\x062\xf7\x0f\n" +
 	"\tAiService\x12`\n" +
 	"\x0fSearchAndAnswer\x12%.steward.ai.v1.SearchAndAnswerRequest\x1a&.steward.ai.v1.SearchAndAnswerResponse\x12`\n" +
 	"\x0fAuthoringAssist\x12%.steward.ai.v1.AuthoringAssistRequest\x1a&.steward.ai.v1.AuthoringAssistResponse\x12T\n" +
 	"\vSubmitAIJob\x12!.steward.ai.v1.SubmitAIJobRequest\x1a\".steward.ai.v1.SubmitAIJobResponse\x12K\n" +
-	"\bGetAIJob\x12\x1e.steward.ai.v1.GetAIJobRequest\x1a\x1f.steward.ai.v1.GetAIJobResponse\x12f\n" +
+	"\bGetAIJob\x12\x1e.steward.ai.v1.GetAIJobRequest\x1a\x1f.steward.ai.v1.GetAIJobResponse\x12]\n" +
+	"\x0eGetAIJobResult\x12$.steward.ai.v1.GetAIJobResultRequest\x1a%.steward.ai.v1.GetAIJobResultResponse\x12f\n" +
 	"\x11GetProviderStatus\x12'.steward.ai.v1.GetProviderStatusRequest\x1a(.steward.ai.v1.GetProviderStatusResponse\x12W\n" +
 	"\fGetAIEnabled\x12\".steward.ai.v1.GetAIEnabledRequest\x1a#.steward.ai.v1.GetAIEnabledResponse\x12W\n" +
 	"\fSetAIEnabled\x12\".steward.ai.v1.SetAIEnabledRequest\x1a#.steward.ai.v1.SetAIEnabledResponse\x12T\n" +
@@ -3372,7 +3478,7 @@ func file_steward_ai_v1_ai_proto_rawDescGZIP() []byte {
 }
 
 var file_steward_ai_v1_ai_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_steward_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 48)
+var file_steward_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
 var file_steward_ai_v1_ai_proto_goTypes = []any{
 	(AssistOperation)(0),                  // 0: steward.ai.v1.AssistOperation
 	(JobOperation)(0),                     // 1: steward.ai.v1.JobOperation
@@ -3390,42 +3496,44 @@ var file_steward_ai_v1_ai_proto_goTypes = []any{
 	(*SubmitAIJobResponse)(nil),           // 13: steward.ai.v1.SubmitAIJobResponse
 	(*GetAIJobRequest)(nil),               // 14: steward.ai.v1.GetAIJobRequest
 	(*GetAIJobResponse)(nil),              // 15: steward.ai.v1.GetAIJobResponse
-	(*QaJobResult)(nil),                   // 16: steward.ai.v1.QaJobResult
-	(*GetProviderStatusRequest)(nil),      // 17: steward.ai.v1.GetProviderStatusRequest
-	(*GetProviderStatusResponse)(nil),     // 18: steward.ai.v1.GetProviderStatusResponse
-	(*GetAIEnabledRequest)(nil),           // 19: steward.ai.v1.GetAIEnabledRequest
-	(*GetAIEnabledResponse)(nil),          // 20: steward.ai.v1.GetAIEnabledResponse
-	(*SetAIEnabledRequest)(nil),           // 21: steward.ai.v1.SetAIEnabledRequest
-	(*SetAIEnabledResponse)(nil),          // 22: steward.ai.v1.SetAIEnabledResponse
-	(*DataNotice)(nil),                    // 23: steward.ai.v1.DataNotice
-	(*AIConfig)(nil),                      // 24: steward.ai.v1.AIConfig
-	(*GetAIConfigRequest)(nil),            // 25: steward.ai.v1.GetAIConfigRequest
-	(*GetAIConfigResponse)(nil),           // 26: steward.ai.v1.GetAIConfigResponse
-	(*SetProviderConfigRequest)(nil),      // 27: steward.ai.v1.SetProviderConfigRequest
-	(*SetProviderConfigResponse)(nil),     // 28: steward.ai.v1.SetProviderConfigResponse
-	(*SetProviderCredentialRequest)(nil),  // 29: steward.ai.v1.SetProviderCredentialRequest
-	(*SetProviderCredentialResponse)(nil), // 30: steward.ai.v1.SetProviderCredentialResponse
-	(*TestProviderRequest)(nil),           // 31: steward.ai.v1.TestProviderRequest
-	(*TestProviderResponse)(nil),          // 32: steward.ai.v1.TestProviderResponse
-	(*AcceptDataNoticeRequest)(nil),       // 33: steward.ai.v1.AcceptDataNoticeRequest
-	(*AcceptDataNoticeResponse)(nil),      // 34: steward.ai.v1.AcceptDataNoticeResponse
-	(*SetMonthlyLimitRequest)(nil),        // 35: steward.ai.v1.SetMonthlyLimitRequest
-	(*SetMonthlyLimitResponse)(nil),       // 36: steward.ai.v1.SetMonthlyLimitResponse
-	(*GetUsageRequest)(nil),               // 37: steward.ai.v1.GetUsageRequest
-	(*GetUsageResponse)(nil),              // 38: steward.ai.v1.GetUsageResponse
-	(*SetOrgContextRequest)(nil),          // 39: steward.ai.v1.SetOrgContextRequest
-	(*SetOrgContextResponse)(nil),         // 40: steward.ai.v1.SetOrgContextResponse
-	(*GetTopQuestionsRequest)(nil),        // 41: steward.ai.v1.GetTopQuestionsRequest
-	(*GetTopQuestionsResponse)(nil),       // 42: steward.ai.v1.GetTopQuestionsResponse
-	(*GetPolicySummaryRequest)(nil),       // 43: steward.ai.v1.GetPolicySummaryRequest
-	(*GetPolicySummaryResponse)(nil),      // 44: steward.ai.v1.GetPolicySummaryResponse
-	(*SetAIRetrievalConfigRequest)(nil),   // 45: steward.ai.v1.SetAIRetrievalConfigRequest
-	(*SetAIRetrievalConfigResponse)(nil),  // 46: steward.ai.v1.SetAIRetrievalConfigResponse
-	(*SetUserAiQueryLimitRequest)(nil),    // 47: steward.ai.v1.SetUserAiQueryLimitRequest
-	(*SetUserAiQueryLimitResponse)(nil),   // 48: steward.ai.v1.SetUserAiQueryLimitResponse
-	(*GetRelatedPoliciesRequest)(nil),     // 49: steward.ai.v1.GetRelatedPoliciesRequest
-	(*GetRelatedPoliciesResponse)(nil),    // 50: steward.ai.v1.GetRelatedPoliciesResponse
-	(*RelatedPolicy)(nil),                 // 51: steward.ai.v1.RelatedPolicy
+	(*GetAIJobResultRequest)(nil),         // 16: steward.ai.v1.GetAIJobResultRequest
+	(*GetAIJobResultResponse)(nil),        // 17: steward.ai.v1.GetAIJobResultResponse
+	(*QaJobResult)(nil),                   // 18: steward.ai.v1.QaJobResult
+	(*GetProviderStatusRequest)(nil),      // 19: steward.ai.v1.GetProviderStatusRequest
+	(*GetProviderStatusResponse)(nil),     // 20: steward.ai.v1.GetProviderStatusResponse
+	(*GetAIEnabledRequest)(nil),           // 21: steward.ai.v1.GetAIEnabledRequest
+	(*GetAIEnabledResponse)(nil),          // 22: steward.ai.v1.GetAIEnabledResponse
+	(*SetAIEnabledRequest)(nil),           // 23: steward.ai.v1.SetAIEnabledRequest
+	(*SetAIEnabledResponse)(nil),          // 24: steward.ai.v1.SetAIEnabledResponse
+	(*DataNotice)(nil),                    // 25: steward.ai.v1.DataNotice
+	(*AIConfig)(nil),                      // 26: steward.ai.v1.AIConfig
+	(*GetAIConfigRequest)(nil),            // 27: steward.ai.v1.GetAIConfigRequest
+	(*GetAIConfigResponse)(nil),           // 28: steward.ai.v1.GetAIConfigResponse
+	(*SetProviderConfigRequest)(nil),      // 29: steward.ai.v1.SetProviderConfigRequest
+	(*SetProviderConfigResponse)(nil),     // 30: steward.ai.v1.SetProviderConfigResponse
+	(*SetProviderCredentialRequest)(nil),  // 31: steward.ai.v1.SetProviderCredentialRequest
+	(*SetProviderCredentialResponse)(nil), // 32: steward.ai.v1.SetProviderCredentialResponse
+	(*TestProviderRequest)(nil),           // 33: steward.ai.v1.TestProviderRequest
+	(*TestProviderResponse)(nil),          // 34: steward.ai.v1.TestProviderResponse
+	(*AcceptDataNoticeRequest)(nil),       // 35: steward.ai.v1.AcceptDataNoticeRequest
+	(*AcceptDataNoticeResponse)(nil),      // 36: steward.ai.v1.AcceptDataNoticeResponse
+	(*SetMonthlyLimitRequest)(nil),        // 37: steward.ai.v1.SetMonthlyLimitRequest
+	(*SetMonthlyLimitResponse)(nil),       // 38: steward.ai.v1.SetMonthlyLimitResponse
+	(*GetUsageRequest)(nil),               // 39: steward.ai.v1.GetUsageRequest
+	(*GetUsageResponse)(nil),              // 40: steward.ai.v1.GetUsageResponse
+	(*SetOrgContextRequest)(nil),          // 41: steward.ai.v1.SetOrgContextRequest
+	(*SetOrgContextResponse)(nil),         // 42: steward.ai.v1.SetOrgContextResponse
+	(*GetTopQuestionsRequest)(nil),        // 43: steward.ai.v1.GetTopQuestionsRequest
+	(*GetTopQuestionsResponse)(nil),       // 44: steward.ai.v1.GetTopQuestionsResponse
+	(*GetPolicySummaryRequest)(nil),       // 45: steward.ai.v1.GetPolicySummaryRequest
+	(*GetPolicySummaryResponse)(nil),      // 46: steward.ai.v1.GetPolicySummaryResponse
+	(*SetAIRetrievalConfigRequest)(nil),   // 47: steward.ai.v1.SetAIRetrievalConfigRequest
+	(*SetAIRetrievalConfigResponse)(nil),  // 48: steward.ai.v1.SetAIRetrievalConfigResponse
+	(*SetUserAiQueryLimitRequest)(nil),    // 49: steward.ai.v1.SetUserAiQueryLimitRequest
+	(*SetUserAiQueryLimitResponse)(nil),   // 50: steward.ai.v1.SetUserAiQueryLimitResponse
+	(*GetRelatedPoliciesRequest)(nil),     // 51: steward.ai.v1.GetRelatedPoliciesRequest
+	(*GetRelatedPoliciesResponse)(nil),    // 52: steward.ai.v1.GetRelatedPoliciesResponse
+	(*RelatedPolicy)(nil),                 // 53: steward.ai.v1.RelatedPolicy
 }
 var file_steward_ai_v1_ai_proto_depIdxs = []int32{
 	4,  // 0: steward.ai.v1.SearchAndAnswerRequest.scope:type_name -> steward.ai.v1.ReadScope
@@ -3436,60 +3544,62 @@ var file_steward_ai_v1_ai_proto_depIdxs = []int32{
 	4,  // 5: steward.ai.v1.SubmitAIJobRequest.scope:type_name -> steward.ai.v1.ReadScope
 	1,  // 6: steward.ai.v1.SubmitAIJobRequest.operation:type_name -> steward.ai.v1.JobOperation
 	2,  // 7: steward.ai.v1.GetAIJobResponse.phase:type_name -> steward.ai.v1.JobPhase
-	16, // 8: steward.ai.v1.GetAIJobResponse.qa_result:type_name -> steward.ai.v1.QaJobResult
+	18, // 8: steward.ai.v1.GetAIJobResponse.qa_result:type_name -> steward.ai.v1.QaJobResult
 	9,  // 9: steward.ai.v1.QaJobResult.citations:type_name -> steward.ai.v1.Citation
 	7,  // 10: steward.ai.v1.QaJobResult.segments:type_name -> steward.ai.v1.AnswerSegment
 	3,  // 11: steward.ai.v1.AIConfig.provider:type_name -> steward.ai.v1.Provider
-	23, // 12: steward.ai.v1.AIConfig.data_notice:type_name -> steward.ai.v1.DataNotice
-	24, // 13: steward.ai.v1.GetAIConfigResponse.config:type_name -> steward.ai.v1.AIConfig
+	25, // 12: steward.ai.v1.AIConfig.data_notice:type_name -> steward.ai.v1.DataNotice
+	26, // 13: steward.ai.v1.GetAIConfigResponse.config:type_name -> steward.ai.v1.AIConfig
 	3,  // 14: steward.ai.v1.SetProviderConfigRequest.provider:type_name -> steward.ai.v1.Provider
-	24, // 15: steward.ai.v1.SetProviderConfigResponse.config:type_name -> steward.ai.v1.AIConfig
-	23, // 16: steward.ai.v1.AcceptDataNoticeResponse.data_notice:type_name -> steward.ai.v1.DataNotice
+	26, // 15: steward.ai.v1.SetProviderConfigResponse.config:type_name -> steward.ai.v1.AIConfig
+	25, // 16: steward.ai.v1.AcceptDataNoticeResponse.data_notice:type_name -> steward.ai.v1.DataNotice
 	4,  // 17: steward.ai.v1.GetTopQuestionsRequest.scope:type_name -> steward.ai.v1.ReadScope
 	4,  // 18: steward.ai.v1.GetRelatedPoliciesRequest.scope:type_name -> steward.ai.v1.ReadScope
-	51, // 19: steward.ai.v1.GetRelatedPoliciesResponse.related:type_name -> steward.ai.v1.RelatedPolicy
+	53, // 19: steward.ai.v1.GetRelatedPoliciesResponse.related:type_name -> steward.ai.v1.RelatedPolicy
 	5,  // 20: steward.ai.v1.AiService.SearchAndAnswer:input_type -> steward.ai.v1.SearchAndAnswerRequest
 	10, // 21: steward.ai.v1.AiService.AuthoringAssist:input_type -> steward.ai.v1.AuthoringAssistRequest
 	12, // 22: steward.ai.v1.AiService.SubmitAIJob:input_type -> steward.ai.v1.SubmitAIJobRequest
 	14, // 23: steward.ai.v1.AiService.GetAIJob:input_type -> steward.ai.v1.GetAIJobRequest
-	17, // 24: steward.ai.v1.AiService.GetProviderStatus:input_type -> steward.ai.v1.GetProviderStatusRequest
-	19, // 25: steward.ai.v1.AiService.GetAIEnabled:input_type -> steward.ai.v1.GetAIEnabledRequest
-	21, // 26: steward.ai.v1.AiService.SetAIEnabled:input_type -> steward.ai.v1.SetAIEnabledRequest
-	25, // 27: steward.ai.v1.AiService.GetAIConfig:input_type -> steward.ai.v1.GetAIConfigRequest
-	27, // 28: steward.ai.v1.AiService.SetProviderConfig:input_type -> steward.ai.v1.SetProviderConfigRequest
-	29, // 29: steward.ai.v1.AiService.SetProviderCredential:input_type -> steward.ai.v1.SetProviderCredentialRequest
-	31, // 30: steward.ai.v1.AiService.TestProvider:input_type -> steward.ai.v1.TestProviderRequest
-	33, // 31: steward.ai.v1.AiService.AcceptDataNotice:input_type -> steward.ai.v1.AcceptDataNoticeRequest
-	35, // 32: steward.ai.v1.AiService.SetMonthlyLimit:input_type -> steward.ai.v1.SetMonthlyLimitRequest
-	37, // 33: steward.ai.v1.AiService.GetUsage:input_type -> steward.ai.v1.GetUsageRequest
-	39, // 34: steward.ai.v1.AiService.SetOrgContext:input_type -> steward.ai.v1.SetOrgContextRequest
-	41, // 35: steward.ai.v1.AiService.GetTopQuestions:input_type -> steward.ai.v1.GetTopQuestionsRequest
-	43, // 36: steward.ai.v1.AiService.GetPolicySummary:input_type -> steward.ai.v1.GetPolicySummaryRequest
-	45, // 37: steward.ai.v1.AiService.SetAIRetrievalConfig:input_type -> steward.ai.v1.SetAIRetrievalConfigRequest
-	47, // 38: steward.ai.v1.AiService.SetUserAiQueryLimit:input_type -> steward.ai.v1.SetUserAiQueryLimitRequest
-	49, // 39: steward.ai.v1.AiService.GetRelatedPolicies:input_type -> steward.ai.v1.GetRelatedPoliciesRequest
-	6,  // 40: steward.ai.v1.AiService.SearchAndAnswer:output_type -> steward.ai.v1.SearchAndAnswerResponse
-	11, // 41: steward.ai.v1.AiService.AuthoringAssist:output_type -> steward.ai.v1.AuthoringAssistResponse
-	13, // 42: steward.ai.v1.AiService.SubmitAIJob:output_type -> steward.ai.v1.SubmitAIJobResponse
-	15, // 43: steward.ai.v1.AiService.GetAIJob:output_type -> steward.ai.v1.GetAIJobResponse
-	18, // 44: steward.ai.v1.AiService.GetProviderStatus:output_type -> steward.ai.v1.GetProviderStatusResponse
-	20, // 45: steward.ai.v1.AiService.GetAIEnabled:output_type -> steward.ai.v1.GetAIEnabledResponse
-	22, // 46: steward.ai.v1.AiService.SetAIEnabled:output_type -> steward.ai.v1.SetAIEnabledResponse
-	26, // 47: steward.ai.v1.AiService.GetAIConfig:output_type -> steward.ai.v1.GetAIConfigResponse
-	28, // 48: steward.ai.v1.AiService.SetProviderConfig:output_type -> steward.ai.v1.SetProviderConfigResponse
-	30, // 49: steward.ai.v1.AiService.SetProviderCredential:output_type -> steward.ai.v1.SetProviderCredentialResponse
-	32, // 50: steward.ai.v1.AiService.TestProvider:output_type -> steward.ai.v1.TestProviderResponse
-	34, // 51: steward.ai.v1.AiService.AcceptDataNotice:output_type -> steward.ai.v1.AcceptDataNoticeResponse
-	36, // 52: steward.ai.v1.AiService.SetMonthlyLimit:output_type -> steward.ai.v1.SetMonthlyLimitResponse
-	38, // 53: steward.ai.v1.AiService.GetUsage:output_type -> steward.ai.v1.GetUsageResponse
-	40, // 54: steward.ai.v1.AiService.SetOrgContext:output_type -> steward.ai.v1.SetOrgContextResponse
-	42, // 55: steward.ai.v1.AiService.GetTopQuestions:output_type -> steward.ai.v1.GetTopQuestionsResponse
-	44, // 56: steward.ai.v1.AiService.GetPolicySummary:output_type -> steward.ai.v1.GetPolicySummaryResponse
-	46, // 57: steward.ai.v1.AiService.SetAIRetrievalConfig:output_type -> steward.ai.v1.SetAIRetrievalConfigResponse
-	48, // 58: steward.ai.v1.AiService.SetUserAiQueryLimit:output_type -> steward.ai.v1.SetUserAiQueryLimitResponse
-	50, // 59: steward.ai.v1.AiService.GetRelatedPolicies:output_type -> steward.ai.v1.GetRelatedPoliciesResponse
-	40, // [40:60] is the sub-list for method output_type
-	20, // [20:40] is the sub-list for method input_type
+	16, // 24: steward.ai.v1.AiService.GetAIJobResult:input_type -> steward.ai.v1.GetAIJobResultRequest
+	19, // 25: steward.ai.v1.AiService.GetProviderStatus:input_type -> steward.ai.v1.GetProviderStatusRequest
+	21, // 26: steward.ai.v1.AiService.GetAIEnabled:input_type -> steward.ai.v1.GetAIEnabledRequest
+	23, // 27: steward.ai.v1.AiService.SetAIEnabled:input_type -> steward.ai.v1.SetAIEnabledRequest
+	27, // 28: steward.ai.v1.AiService.GetAIConfig:input_type -> steward.ai.v1.GetAIConfigRequest
+	29, // 29: steward.ai.v1.AiService.SetProviderConfig:input_type -> steward.ai.v1.SetProviderConfigRequest
+	31, // 30: steward.ai.v1.AiService.SetProviderCredential:input_type -> steward.ai.v1.SetProviderCredentialRequest
+	33, // 31: steward.ai.v1.AiService.TestProvider:input_type -> steward.ai.v1.TestProviderRequest
+	35, // 32: steward.ai.v1.AiService.AcceptDataNotice:input_type -> steward.ai.v1.AcceptDataNoticeRequest
+	37, // 33: steward.ai.v1.AiService.SetMonthlyLimit:input_type -> steward.ai.v1.SetMonthlyLimitRequest
+	39, // 34: steward.ai.v1.AiService.GetUsage:input_type -> steward.ai.v1.GetUsageRequest
+	41, // 35: steward.ai.v1.AiService.SetOrgContext:input_type -> steward.ai.v1.SetOrgContextRequest
+	43, // 36: steward.ai.v1.AiService.GetTopQuestions:input_type -> steward.ai.v1.GetTopQuestionsRequest
+	45, // 37: steward.ai.v1.AiService.GetPolicySummary:input_type -> steward.ai.v1.GetPolicySummaryRequest
+	47, // 38: steward.ai.v1.AiService.SetAIRetrievalConfig:input_type -> steward.ai.v1.SetAIRetrievalConfigRequest
+	49, // 39: steward.ai.v1.AiService.SetUserAiQueryLimit:input_type -> steward.ai.v1.SetUserAiQueryLimitRequest
+	51, // 40: steward.ai.v1.AiService.GetRelatedPolicies:input_type -> steward.ai.v1.GetRelatedPoliciesRequest
+	6,  // 41: steward.ai.v1.AiService.SearchAndAnswer:output_type -> steward.ai.v1.SearchAndAnswerResponse
+	11, // 42: steward.ai.v1.AiService.AuthoringAssist:output_type -> steward.ai.v1.AuthoringAssistResponse
+	13, // 43: steward.ai.v1.AiService.SubmitAIJob:output_type -> steward.ai.v1.SubmitAIJobResponse
+	15, // 44: steward.ai.v1.AiService.GetAIJob:output_type -> steward.ai.v1.GetAIJobResponse
+	17, // 45: steward.ai.v1.AiService.GetAIJobResult:output_type -> steward.ai.v1.GetAIJobResultResponse
+	20, // 46: steward.ai.v1.AiService.GetProviderStatus:output_type -> steward.ai.v1.GetProviderStatusResponse
+	22, // 47: steward.ai.v1.AiService.GetAIEnabled:output_type -> steward.ai.v1.GetAIEnabledResponse
+	24, // 48: steward.ai.v1.AiService.SetAIEnabled:output_type -> steward.ai.v1.SetAIEnabledResponse
+	28, // 49: steward.ai.v1.AiService.GetAIConfig:output_type -> steward.ai.v1.GetAIConfigResponse
+	30, // 50: steward.ai.v1.AiService.SetProviderConfig:output_type -> steward.ai.v1.SetProviderConfigResponse
+	32, // 51: steward.ai.v1.AiService.SetProviderCredential:output_type -> steward.ai.v1.SetProviderCredentialResponse
+	34, // 52: steward.ai.v1.AiService.TestProvider:output_type -> steward.ai.v1.TestProviderResponse
+	36, // 53: steward.ai.v1.AiService.AcceptDataNotice:output_type -> steward.ai.v1.AcceptDataNoticeResponse
+	38, // 54: steward.ai.v1.AiService.SetMonthlyLimit:output_type -> steward.ai.v1.SetMonthlyLimitResponse
+	40, // 55: steward.ai.v1.AiService.GetUsage:output_type -> steward.ai.v1.GetUsageResponse
+	42, // 56: steward.ai.v1.AiService.SetOrgContext:output_type -> steward.ai.v1.SetOrgContextResponse
+	44, // 57: steward.ai.v1.AiService.GetTopQuestions:output_type -> steward.ai.v1.GetTopQuestionsResponse
+	46, // 58: steward.ai.v1.AiService.GetPolicySummary:output_type -> steward.ai.v1.GetPolicySummaryResponse
+	48, // 59: steward.ai.v1.AiService.SetAIRetrievalConfig:output_type -> steward.ai.v1.SetAIRetrievalConfigResponse
+	50, // 60: steward.ai.v1.AiService.SetUserAiQueryLimit:output_type -> steward.ai.v1.SetUserAiQueryLimitResponse
+	52, // 61: steward.ai.v1.AiService.GetRelatedPolicies:output_type -> steward.ai.v1.GetRelatedPoliciesResponse
+	41, // [41:62] is the sub-list for method output_type
+	20, // [20:41] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
 	20, // [20:20] is the sub-list for extension extendee
 	0,  // [0:20] is the sub-list for field type_name
@@ -3506,7 +3616,7 @@ func file_steward_ai_v1_ai_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_steward_ai_v1_ai_proto_rawDesc), len(file_steward_ai_v1_ai_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   48,
+			NumMessages:   50,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -17,6 +17,7 @@ var CallerPolicy = workloadidentity.Policy{
 	aiv1.AiService_SearchAndAnswer_FullMethodName:       gateway,
 	aiv1.AiService_AuthoringAssist_FullMethodName:       gateway,
 	aiv1.AiService_SubmitAIJob_FullMethodName:           gateway,
+	aiv1.AiService_GetAIJobResult_FullMethodName:        gateway,
 	aiv1.AiService_GetAIJob_FullMethodName:              gateway,
 	aiv1.AiService_GetProviderStatus_FullMethodName:     gateway,
 	aiv1.AiService_GetAIEnabled_FullMethodName:          gateway,

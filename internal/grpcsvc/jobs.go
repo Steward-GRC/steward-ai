@@ -17,6 +17,7 @@ import (
 	aiv1 "github.com/Steward-GRC/steward-ai/gen/go/steward/ai/v1"
 	"github.com/Steward-GRC/steward-ai/internal/errcodes"
 	"github.com/Steward-GRC/steward-ai/internal/generation"
+	"github.com/Steward-GRC/steward-ai/internal/operator"
 )
 
 // SubmitAIJob creates a PolicyAIJob and returns its name at once; the
@@ -128,6 +129,39 @@ func (s *AiServiceServer) GetAIJob(ctx context.Context, req *aiv1.GetAIJobReques
 		resp.QaResult = s.readQAResult(ctx, job.Status.ResultRef)
 	}
 	return resp, nil
+}
+
+// GetAIJobResult returns a job's stored result after its cache entry has
+// expired. It reads the durable row only, so it works when the cache and the
+// PolicyAIJob are both gone. Only the submitter may read it, by the same rule
+// the cached envelope uses (operator.ResultEnvelope.OwnedBy); anyone else, and
+// an id with no stored result, reads as job not found, so an id reveals
+// nothing about another person's job.
+func (s *AiServiceServer) GetAIJobResult(ctx context.Context, req *aiv1.GetAIJobResultRequest) (*aiv1.GetAIJobResultResponse, error) {
+	actor, err := s.requireActor(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if req.GetJobId() == "" {
+		return nil, errcodes.Invalid(ctx, "job_id", "required")
+	}
+	l := s.log.Ctx(ctx).With(log.F("job", req.GetJobId()))
+	l.Debug("stored ai job result requested")
+	row, found, err := s.d.StoredResults.Get(ctx, req.GetJobId())
+	if err != nil {
+		l.Error(err, "stored ai job result read failed")
+		return nil, errcodes.Error(ctx, err)
+	}
+	if !found {
+		l.Debug("stored ai job result not found")
+		return nil, errcodes.New(ctx, errcodes.CodeJobNotFound)
+	}
+	if !(operator.ResultEnvelope{OwnerUserID: row.ActorUserID}).OwnedBy(actor.Subject) {
+		l.Warn("stored ai job result read refused: not the submitter")
+		return nil, errcodes.New(ctx, errcodes.CodeJobNotFound)
+	}
+	l.Debug("stored ai job result served", log.F("operation", row.Operation))
+	return &aiv1.GetAIJobResultResponse{Operation: row.Operation, ResultJson: row.ResultJSON}, nil
 }
 
 // qaResultEnvelope is the operator's result envelope for a QA job, decoded

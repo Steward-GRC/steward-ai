@@ -30,6 +30,7 @@ database query, so nothing outside it reaches the model or the answer.
 | `SearchAndAnswer` | Answers a question from the documents the scope may read, with citations and per-segment sources. |
 | `AuthoringAssist` | Suggests text for one editable region (draft, expand, rewrite, clarify, summarise). Never applied by the service. |
 | `SubmitAIJob`, `GetAIJob` | Start an asynchronous job and read its state. A job reads as not found to anyone but its submitter. |
+| `GetAIJobResult` | The stored result of a succeeded job, read from Postgres after the cached copy has expired. Returns `operation` and `result_json`. A job submitted by someone else, and an id with no stored result, read as `AI_JOB_NOT_FOUND`. |
 | `GetRelatedPolicies` | The policies nearest to one policy, filtered by the scope. |
 | `GetTopQuestions`, `GetPolicySummary` | The questions asked most often, only those whose cited policies the scope may all read; the summary stored at publish. |
 | `GetProviderStatus` | The cached provider status; never calls the provider. |
