@@ -107,3 +107,50 @@ func TestConsume_returnsValkeyError(t *testing.T) {
 		t.Fatal("expected the increment error to be returned")
 	}
 }
+
+func TestUsed_readsWithoutCounting(t *testing.T) {
+	c, _ := newTestCounter(t)
+	ctx := context.Background()
+	now := time.Date(2026, 8, 24, 12, 0, 0, 0, time.UTC)
+
+	if n, err := c.Used(ctx, "user-1", now); err != nil || n != 0 {
+		t.Fatalf("a person with no queries reads 0, got %d, %v", n, err)
+	}
+	for range 3 {
+		if _, err := c.Consume(ctx, "user-1", now); err != nil {
+			t.Fatalf("consume: %v", err)
+		}
+	}
+	for range 2 {
+		if n, err := c.Used(ctx, "user-1", now); err != nil || n != 3 {
+			t.Fatalf("expected 3 and no change from reading, got %d, %v", n, err)
+		}
+	}
+	if n, _ := c.Consume(ctx, "user-1", now); n != 4 {
+		t.Fatalf("reading must not have counted a query, next count %d", n)
+	}
+}
+
+func TestUsed_isolatedPerUserAndDay(t *testing.T) {
+	c, _ := newTestCounter(t)
+	ctx := context.Background()
+	day1 := time.Date(2026, 8, 24, 23, 0, 0, 0, time.UTC)
+	day2 := time.Date(2026, 8, 25, 0, 30, 0, 0, time.UTC)
+
+	_, _ = c.Consume(ctx, "a", day1)
+	if n, _ := c.Used(ctx, "b", day1); n != 0 {
+		t.Fatalf("user b must not see user a's count, got %d", n)
+	}
+	if n, _ := c.Used(ctx, "a", day2); n != 0 {
+		t.Fatalf("the next day starts at 0, got %d", n)
+	}
+}
+
+func TestUsed_returnsValkeyError(t *testing.T) {
+	c := New(newValkey(t))
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if _, err := c.Used(ctx, "user-1", time.Now()); err == nil {
+		t.Fatal("expected the read error to be returned")
+	}
+}

@@ -56,7 +56,7 @@ func TestGRPCHandlers_NoUnimplementedRPCs(t *testing.T) {
 	}
 
 	// Bump alongside the proto, so a shape change can't zero the coverage.
-	const wantInvoked = 21
+	const wantInvoked = 22
 	if invoked != wantInvoked {
 		t.Fatalf("expected %d unary RPCs, exercised %d", wantInvoked, invoked)
 	}

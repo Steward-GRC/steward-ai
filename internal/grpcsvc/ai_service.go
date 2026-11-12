@@ -106,6 +106,8 @@ type relatedSource interface {
 // quotaCounter is the per-person daily counter; quota.Counter satisfies it.
 type quotaCounter interface {
 	Consume(ctx context.Context, userID string, now time.Time) (used int64, err error)
+	// Used reads the day's count without counting a query.
+	Used(ctx context.Context, userID string, now time.Time) (used int64, err error)
 }
 
 // userLimitStore holds per-person daily limit overrides;
