@@ -154,6 +154,8 @@ func run(ctx context.Context, logger log.TraceLogger) error {
 		WithRelationshipLearn(relationship.NewEngine(relationships, settings,
 			relationship.UsageHalfLifeFromEnv(), relationship.CandidateTopKFromEnv()).WithLogger(logger)).
 		WithSuggest(generation.NewSuggester(llmClient, centroids, retriever).WithPersister(related)).
+		WithSummaries(generation.NewChangeSummarizer(llmClient), operator.NewValkeySummaryCache(rdb),
+			generation.NewAssist(llmClient), store.NewSummaryStore(db)).
 		WithLogger(logger)
 
 	scheme := runtime.NewScheme()
