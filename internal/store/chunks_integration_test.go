@@ -508,8 +508,8 @@ func TestSearchByCosine_sensitiveRequiresGroupAndIncludeSensitive(t *testing.T) 
 }
 
 // TestSearchByCosine_allCategoriesNeedsIncludeSensitive: AllCategories
-// lifts the category filter but not the sensitivity gate, as in
-// steward-authz, so a sensitive chunk needs IncludeSensitive too.
+// lifts the category filter but not the sensitivity gate, so a sensitive
+// chunk needs IncludeSensitive too.
 func TestSearchByCosine_allCategoriesNeedsIncludeSensitive(t *testing.T) {
 	pool := newTestDB(t)
 	repo := store.NewChunkStore(pool)
