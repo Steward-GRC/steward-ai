@@ -9,8 +9,8 @@
 //   - Read access (ChunkReadable, store.AccessFilter): a document is readable
 //     when its category is in the scope (or the scope reads every category)
 //     and it is standard or the scope includes sensitive documents. Reading
-//     every category never opens sensitive documents on its own, as in
-//     steward-authz. The rule runs inside the SQL; ChunkReadable states it in Go.
+//     every category never opens sensitive documents on its own. The rule
+//     runs inside the SQL; ChunkReadable states it in Go.
 //   - Off is off: while the module is off no intake call is accepted and
 //     nothing calls a provider. A settings read failure refuses the call
 //     rather than run with the module possibly off.
